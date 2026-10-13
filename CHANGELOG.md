@@ -2,6 +2,12 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.2
+
+- Icône de l'intégration (`brand/icon.png`, versions claire et sombre) : l'icône s'affiche
+  dans Home Assistant et HACS au lieu de « icon not available ».
+- Validation HACS complète, sans exception (préparation à l'inclusion dans HACS par défaut).
+
 ## 2027.1.1 — version stable
 
 - Première version stable (contenu de 2027.1.0b0).
