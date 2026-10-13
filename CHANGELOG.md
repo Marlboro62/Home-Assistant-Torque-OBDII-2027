@@ -2,7 +2,7 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
-## 2027.1.0 — version stable
+## 2027.1.1 — version stable
 
 - Première version stable (contenu de 2027.1.0b0).
 - **Nouveau dossier `torque_pids/`** : PID Torque constructeur classés par marque
