@@ -1,0 +1,23 @@
+{
+  "domain": "torque_obd",
+  "name": "Torque OBD-II",
+  "after_dependencies": [
+    "diagnostics"
+  ],
+  "codeowners": [
+    "@Marlboro62"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
+  "documentation": "https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027/issues",
+  "loggers": [
+    "custom_components.torque_obd"
+  ],
+  "requirements": [],
+  "version": "2027.1.0b0"
+}

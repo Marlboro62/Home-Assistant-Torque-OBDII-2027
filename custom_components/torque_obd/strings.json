@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Torque OBD-II",
+        "description": "Configure your vehicle for Torque OBD-II integration. The vehicle name will be used to create a unique API endpoint.",
+        "data": {
+          "vehicle_name": "Vehicle Name (e.g., 2025 Ford Escape)",
+          "email": "Email Address (optional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_vehicle_name": "Invalid vehicle name. Use only letters, numbers, spaces, dashes, and underscores.",
+      "invalid_email": "Invalid email format. Please enter a valid email address.",
+      "unknown": "Unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This vehicle name is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Torque profiles for this vehicle",
+        "description": "The vehicle is matched automatically when the Torque profile has its name. Torque sometimes sends a numeric ID instead (e.g. 1966413…): such IDs are learned automatically and listed here. Add or remove entries (comma separated). PIDs to ignore: keys of PIDs belonging to another car (e.g. k2101, k2174), comma-separated. Their entities are removed.",
+        "data": {
+          "profile_aliases": "Torque profile names / IDs",
+          "ignored_pids": "PIDs to ignore for this vehicle (e.g. k2101, k2174)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurer Torque OBD-II",
+        "description": "Configurez votre véhicule. Son nom sert à créer une URL unique à saisir dans Torque Pro.",
+        "data": {
+          "vehicle_name": "Nom du véhicule (ex. : Ma voiture)",
+          "email": "Adresse e-mail Torque (facultatif, sert de filtre si Torque l'envoie)"
+        }
+      }
+    },
+    "error": {
+      "invalid_vehicle_name": "Nom invalide. Utilisez uniquement lettres, chiffres, espaces, tirets et underscores.",
+      "invalid_email": "Format d'e-mail invalide.",
+      "unknown": "Erreur inattendue."
+    },
+    "abort": {
+      "already_configured": "Ce véhicule (ou un nom donnant la même URL) est déjà configuré."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Profils Torque de ce véhicule",
+        "description": "Le véhicule est reconnu automatiquement quand le profil Torque porte son nom. Torque envoie parfois un identifiant numérique à la place (ex. 1966413…) : ces identifiants sont appris automatiquement et listés ici. Vous pouvez en ajouter ou en retirer (séparés par des virgules). PID à ignorer : clés des PID d'une autre voiture (ex. k2101, k2174), séparées par des virgules. Leurs entités sont supprimées.",
+        "data": {
+          "profile_aliases": "Noms / identifiants de profil Torque",
+          "ignored_pids": "PID à ignorer pour ce véhicule (ex. k2101, k2174)"
+        }
+      }
+    }
+  }
+}

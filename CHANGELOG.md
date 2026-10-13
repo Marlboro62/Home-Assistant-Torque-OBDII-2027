@@ -1,0 +1,26 @@
+# Changelog
+
+Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
+
+## 2027.1.0b0 — pré-version
+
+Reprise complète de l'intégration (base JOHLC/Home-Assistant-Torque-OBDII).
+
+### Nouveautés
+- **Plusieurs véhicules sur un même téléphone** : aiguillage automatique selon le nom du profil Torque
+  (`profileName`), avec apprentissage des identifiants numériques et alias modifiables dans les options.
+- **PID à ignorer par véhicule** (options) : supprime les entités d'un PID d'une autre voiture
+  (ex. `k2101, k2174`) et filtre ses valeurs.
+- **PID perso à code partagé** (ex. bloc KWP `21 01`) : quand Torque envoie plusieurs fois la même clé,
+  les valeurs sont séparées dans l'ordre des noms courts (`k2101_<nomcourt>`) et deviennent des
+  capteurs distincts. Message dans le journal HA indiquant si la séparation a réussi.
+- **Noms des capteurs en français**.
+- `device_tracker` (position GPS), `binary_sensor` « Torque connecté », diagnostics.
+- Tension affichée avec 2 décimales par défaut, filtrage des valeurs hors plage.
+
+### Corrections
+- Clés répétées dans la requête Torque : plus de perte silencieuse des valeurs.
+- Métadonnées (`profileName`, `session`, `id`, `eml`) protégées si Torque les répète.
+
+### À valider avant 2027.1.0
+- Séparation des PID perso à code partagé sur un vrai trajet.
