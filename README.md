@@ -21,6 +21,7 @@ Intégration personnalisée qui reçoit les données OBD-II envoyées par l'appl
 - **PID perso à code partagé** (ex. bloc `21 01`) séparés en capteurs distincts
 - Position GPS (`device_tracker`), état « Torque connecté », diagnostics
 - Définitions de capteurs personnalisables via `/config/torque_sensor_definitions.yaml`
+- **PID Torque prêts à l'emploi** pour les Dacia ([`torque_pids/dacia`](torque_pids/dacia))
 
 ## Installation
 
@@ -32,7 +33,7 @@ Ou manuellement :
 1. HACS → ⋮ → **Dépôts personnalisés**
 2. URL : `https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027` — catégorie **Intégration**
 3. Installer **Torque OBD-II**, puis redémarrer Home Assistant
-4. Pour les pré-versions (`…b0`) : activer « Afficher les versions bêta » dans HACS
+4. Pour les pré-versions (`…b0`) : activer l'interrupteur *Pre-release* du dépôt dans HACS
 
 ### Manuelle
 Copier `custom_components/torque_obd` dans `/config/custom_components/`, puis redémarrer.
@@ -83,6 +84,15 @@ kd:
   state_class: measurement
 ```
 
+## PID Torque fournis
+
+| Dossier | Véhicules |
+|---|---|
+| [`torque_pids/dacia`](torque_pids/dacia) | Dacia Logan, Sandero, Duster, Dokker, Lodgy, Jogger — essence & diesel, 1ʳᵉ gén. (ligne K) et 2ᵉ gén. (CAN) |
+
+Chaque dossier contient les CSV à importer dans Torque, un README (quel fichier pour quel
+moteur) et le fichier de définitions HA (noms, unités, icônes).
+
 ## PID perso à code partagé
 
 Quand plusieurs PID perso lisent la même réponse (ex. un bloc `21 01` dont on extrait
@@ -123,6 +133,7 @@ Custom Home Assistant integration receiving OBD-II data from the **Torque Pro** 
 **Features**: one device per vehicle (`/api/torque-<vehicle-name>`), several vehicles on one
 phone (routed by Torque profile name), per-vehicle ignored PIDs, splitting of custom PIDs
 sharing the same request (e.g. `2101` → `k2101_<shortname>`), GPS `device_tracker`,
+ready-made Torque PID files for Dacia vehicles (`torque_pids/dacia`),
 "Torque connected" binary sensor, diagnostics, custom definitions in
 `/config/torque_sensor_definitions.yaml`.
 

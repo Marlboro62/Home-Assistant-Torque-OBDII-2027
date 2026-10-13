@@ -2,6 +2,13 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.0 — version stable
+
+- Première version stable (contenu de 2027.1.0b0).
+- **Nouveau dossier `torque_pids/dacia/`** : PID Torque Dacia (Logan, Sandero, Duster, Dokker,
+  Lodgy, Jogger — essence et diesel, 1ʳᵉ génération ligne K et 2ᵉ génération CAN), issus de la
+  base Renault DDT2000, avec le fichier de définitions HA correspondant.
+
 ## 2027.1.0b0 — pré-version
 
 Reprise complète de l'intégration (base JOHLC/Home-Assistant-Torque-OBDII).
@@ -22,5 +29,3 @@ Reprise complète de l'intégration (base JOHLC/Home-Assistant-Torque-OBDII).
 - Clés répétées dans la requête Torque : plus de perte silencieuse des valeurs.
 - Métadonnées (`profileName`, `session`, `id`, `eml`) protégées si Torque les répète.
 
-### À valider avant 2027.1.0
-- Séparation des PID perso à code partagé sur un vrai trajet.

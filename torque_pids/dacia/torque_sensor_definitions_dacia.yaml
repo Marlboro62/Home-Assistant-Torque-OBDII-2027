@@ -1,0 +1,450 @@
+# Définitions des capteurs pour les PID Dacia de ce dossier.
+# Copier (ou ajouter) dans /config/torque_sensor_definitions.yaml puis redémarrer HA.
+# Les PID K-line (mode 21) partagent un même bloc : clé k21xx_<nomcourt>.
+k222002:
+  name: Dacia - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k222003:
+  name: Dacia - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k222001:
+  name: Dacia - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k222007:
+  name: Dacia - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k222008:
+  name: Dacia - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k22240d:
+  name: Dacia - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k222005:
+  name: Dacia - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k222009:
+  name: Dacia - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k22240b:
+  name: Dacia - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222004:
+  name: Dacia - Couple moteur effectif
+  icon: mdi:engine
+  state_class: measurement
+  min: -100
+  max: 500
+  unit: Nm
+k22202e:
+  name: Dacia - Position pédale
+  icon: mdi:car-brake-parking
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222024:
+  name: Dacia - Consigne ralenti
+  icon: mdi:engine-outline
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k222006:
+  name: Dacia - Kilométrage total
+  icon: mdi:counter
+  state_class: total_increasing
+  min: 0
+  max: 999999
+  unit: km
+  device_class: distance
+k222057:
+  name: Dacia - Puissance alternateur
+  icon: mdi:flash
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: W
+  device_class: power
+k22242f:
+  name: Dacia - Position papillon
+  icon: mdi:valve
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222807:
+  name: Dacia - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k222804:
+  name: Dacia - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k222449:
+  name: Dacia - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k22244a:
+  name: Dacia - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k222422:
+  name: Dacia - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222401:
+  name: Dacia - Pression suralimentation
+  icon: mdi:turbine
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222841:
+  name: Dacia - Ratés cylindre 1
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222842:
+  name: Dacia - Ratés cylindre 2
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222843:
+  name: Dacia - Ratés cylindre 3
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222844:
+  name: Dacia - Ratés cylindre 4
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222402:
+  name: Dacia - Consigne suralimentation
+  icon: mdi:turbine
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k222801:
+  name: Dacia - Pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k222802:
+  name: Dacia - Consigne pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k2224f2:
+  name: Dacia - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222806:
+  name: Dacia - Débit carburant
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp
+k222407:
+  name: Dacia - Position vanne EGR
+  icon: mdi:valve
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k22242c:
+  name: Dacia - FAP masse de suies
+  icon: mdi:smoke
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: g
+k222542:
+  name: Dacia - FAP pression différentielle
+  icon: mdi:gauge
+  state_class: measurement
+  min: -100
+  max: 1000
+  unit: mbar
+  device_class: pressure
+k22243b:
+  name: Dacia - Température avant catalyseur
+  icon: mdi:thermometer-high
+  state_class: measurement
+  min: -40
+  max: 1000
+  unit: °C
+  device_class: temperature
+k222486:
+  name: Dacia - FAP avancement régénération
+  icon: mdi:progress-clock
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222481:
+  name: Dacia - FAP régénérations réussies
+  icon: mdi:counter
+  state_class: measurement
+  min: 0
+  max: 255
+k21a9_rpm:
+  name: Dacia - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k21a9_speed:
+  name: Dacia - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k21a9_coolant:
+  name: Dacia - Température eau
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a9_iat:
+  name: Dacia - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a9_batt:
+  name: Dacia - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k21a9_map:
+  name: Dacia - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 100
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k21a9_o2up:
+  name: Dacia - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k21a9_o2down:
+  name: Dacia - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k21a9_knockcorr:
+  name: Dacia - Correction avance cliquetis
+  icon: mdi:hammer
+  state_class: measurement
+  min: 0
+  max: 96
+  unit: °
+k21aa_advance:
+  name: Dacia - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k21aa_injtime:
+  name: Dacia - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k21aa_lambda:
+  name: Dacia - Correction richesse
+  icon: mdi:tune
+  state_class: measurement
+  min: 0
+  max: 255
+k21a3_rpm:
+  name: Dacia - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 6000
+  unit: rpm
+k21a3_speed:
+  name: Dacia - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k21a3_coolant:
+  name: Dacia - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k21a3_load:
+  name: Dacia - Charge moteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k21a0_boost:
+  name: Dacia - Pression suralimentation
+  icon: mdi:turbine
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k21a0_atmo:
+  name: Dacia - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k21a0_rail:
+  name: Dacia - Pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k21a0_batt:
+  name: Dacia - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k21a0_iat:
+  name: Dacia - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a0_fueltemp:
+  name: Dacia - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a0_pedal:
+  name: Dacia - Position pédale
+  icon: mdi:car-brake-parking
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k21a4_fuelflow:
+  name: Dacia - Débit carburant injecté
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp
