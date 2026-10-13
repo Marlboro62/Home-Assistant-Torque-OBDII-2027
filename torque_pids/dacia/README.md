@@ -1,7 +1,10 @@
 # PID Torque — Dacia
 
 PID constructeur (Renault / Dacia) à importer dans Torque Pro, extraits de la base de
-diagnostic Renault DDT2000 (février 2021). Ils complètent les PID OBD standard.
+diagnostic Renault DDT2000. Ils complètent les PID OBD standard.
+
+> ℹ️ Base DDT2000 de **février 2021** : les modèles sortis après 2021 (Jogger, nouveau
+> Duster, Sandero III phase 2…) n'y figurent pas.
 
 > ⚠️ Formules issues des fichiers officiels des calculateurs, **non testées sur chaque
 > véhicule**. Une version de calculateur peut différer : vérifier les valeurs (régime,
@@ -11,7 +14,7 @@ diagnostic Renault DDT2000 (février 2021). Ils complètent les PID OBD standard
 
 | Génération | Modèles | Moteur | Fichiers |
 |---|---|---|---|
-| **2ᵉ génération (2012 →)** — CAN | Logan II, Sandero II / III, Duster I ph2 / II, Dokker, Lodgy, Jogger | Essence 1.2 16V, SCe, TCe | `Dacia_1_CAN_commun` + `Dacia_2_CAN_essence` |
+| **2ᵉ génération (2012 →)** — CAN | Logan II / III, Sandero II / III, Duster I ph2 / II, Dokker, Lodgy | Essence 1.2 16V, SCe, TCe | `Dacia_1_CAN_commun` + `Dacia_2_CAN_essence` |
 | | | Diesel 1.5 dCi (K9K) | `Dacia_1_CAN_commun` + `Dacia_3_CAN_diesel` |
 | **1ʳᵉ génération (2004 → 2012)** — ligne K | Logan I, Sandero I, Duster I ph1 | Essence 1.4 / 1.6 8V (K7J/K7M), 1.6 16V (K4M) — Siemens Sirius 32/34 | `Dacia_4_Kline_essence_Sirius` |
 | | | Diesel 1.5 dCi (K9K) — Delphi DCM1.2 | `Dacia_5_Kline_diesel_DCM12` |

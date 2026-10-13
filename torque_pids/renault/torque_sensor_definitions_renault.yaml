@@ -1,0 +1,609 @@
+# Définitions des capteurs pour les PID Renault de ce dossier.
+# Copier (ou ajouter) dans /config/torque_sensor_definitions.yaml puis redémarrer HA.
+# Les PID ligne K (mode 21) partagent un même bloc : clé k21xx_<nomcourt>.
+k222002:
+  name: Renault - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k222003:
+  name: Renault - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k222001:
+  name: Renault - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k222007:
+  name: Renault - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k222008:
+  name: Renault - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k22240d:
+  name: Renault - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k222005:
+  name: Renault - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k222009:
+  name: Renault - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k22240b:
+  name: Renault - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222004:
+  name: Renault - Couple moteur effectif
+  icon: mdi:engine
+  state_class: measurement
+  min: -100
+  max: 500
+  unit: Nm
+k22202e:
+  name: Renault - Position pédale
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222024:
+  name: Renault - Consigne ralenti
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k222006:
+  name: Renault - Kilométrage total
+  icon: mdi:counter
+  state_class: total_increasing
+  min: 0
+  max: 999999
+  unit: km
+  device_class: distance
+k222057:
+  name: Renault - Puissance alternateur
+  icon: mdi:flash
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: W
+  device_class: power
+k22242f:
+  name: Renault - Position papillon
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222807:
+  name: Renault - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k222804:
+  name: Renault - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k222449:
+  name: Renault - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k22244a:
+  name: Renault - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k222422:
+  name: Renault - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222401:
+  name: Renault - Pression suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222841:
+  name: Renault - Ratés cylindre 1
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222842:
+  name: Renault - Ratés cylindre 2
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222843:
+  name: Renault - Ratés cylindre 3
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222844:
+  name: Renault - Ratés cylindre 4
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222402:
+  name: Renault - Consigne suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k222801:
+  name: Renault - Pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k222802:
+  name: Renault - Consigne pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k2224f2:
+  name: Renault - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222806:
+  name: Renault - Débit carburant
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp
+k222407:
+  name: Renault - Position vanne EGR
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k22242c:
+  name: Renault - FAP masse de suies
+  icon: mdi:smoke
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: g
+k222542:
+  name: Renault - FAP pression différentielle
+  icon: mdi:gauge
+  state_class: measurement
+  min: -100
+  max: 1000
+  unit: mbar
+  device_class: pressure
+k22243b:
+  name: Renault - Température avant catalyseur
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 1000
+  unit: °C
+  device_class: temperature
+k222486:
+  name: Renault - FAP avancement régénération
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222481:
+  name: Renault - FAP régénérations réussies
+  icon: mdi:car-info
+  state_class: measurement
+  min: 0
+  max: 255
+k221201:
+  name: Renault - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 8000
+  unit: rpm
+k221102:
+  name: Renault - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 260
+  unit: km/h
+  device_class: speed
+k221101:
+  name: Renault - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k22111f:
+  name: Renault - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k221106:
+  name: Renault - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k221103:
+  name: Renault - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k221107:
+  name: Renault - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -10
+  max: 60
+  unit: °
+k221206:
+  name: Renault - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k221209:
+  name: Renault - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 300
+  unit: g/s
+k22111a:
+  name: Renault - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k221123:
+  name: Renault - Correction richesse
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 200
+  unit: '%'
+k22110d:
+  name: Renault - Consigne ralenti
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k21a9_rpm:
+  name: Renault - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k21a9_speed:
+  name: Renault - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k21a9_coolant:
+  name: Renault - Température eau
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a9_iat:
+  name: Renault - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a9_batt:
+  name: Renault - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k21a9_map:
+  name: Renault - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 100
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k21a9_o2up:
+  name: Renault - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k21a9_o2down:
+  name: Renault - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k21a9_knockcorr:
+  name: Renault - Correction avance cliquetis
+  icon: mdi:flash
+  state_class: measurement
+  min: 0
+  max: 96
+  unit: °
+k21aa_advance:
+  name: Renault - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k21aa_injtime:
+  name: Renault - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k21aa_lambda:
+  name: Renault - Correction richesse
+  icon: mdi:car-info
+  state_class: measurement
+  min: 0
+  max: 255
+k21a0_rpm:
+  name: Renault - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k21a0_speed:
+  name: Renault - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k21a0_iat:
+  name: Renault - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a0_batt:
+  name: Renault - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k21a0_map:
+  name: Renault - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 100
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k21a0_advance:
+  name: Renault - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k21a4_o2up:
+  name: Renault - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k21a3_rpm:
+  name: Renault - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 6000
+  unit: rpm
+k21a3_speed:
+  name: Renault - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k21a3_coolant:
+  name: Renault - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k21a3_load:
+  name: Renault - Charge moteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k21a0_boost:
+  name: Renault - Pression suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k21a0_atmo:
+  name: Renault - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k21a0_rail:
+  name: Renault - Pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k21a0_fueltemp:
+  name: Renault - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a0_pedal:
+  name: Renault - Position pédale
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k21a4_fuelflow:
+  name: Renault - Débit carburant injecté
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp
+k21a1_coolant:
+  name: Renault - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k21a1_iat:
+  name: Renault - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k21a3_boost:
+  name: Renault - Pression suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k21a5_fuelflow:
+  name: Renault - Débit carburant injecté
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp

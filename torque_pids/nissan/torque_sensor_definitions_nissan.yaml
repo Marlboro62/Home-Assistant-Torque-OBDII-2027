@@ -1,0 +1,358 @@
+# Définitions des capteurs pour les PID Nissan de ce dossier.
+# Copier (ou ajouter) dans /config/torque_sensor_definitions.yaml puis redémarrer HA.
+# Les PID ligne K (mode 21) partagent un même bloc : clé k21xx_<nomcourt>.
+k221201:
+  name: Nissan - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 8000
+  unit: rpm
+k221102:
+  name: Nissan - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 260
+  unit: km/h
+  device_class: speed
+k221101:
+  name: Nissan - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k22111f:
+  name: Nissan - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k221106:
+  name: Nissan - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k221103:
+  name: Nissan - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k221107:
+  name: Nissan - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -10
+  max: 60
+  unit: °
+k221206:
+  name: Nissan - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k221209:
+  name: Nissan - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 300
+  unit: g/s
+k22111a:
+  name: Nissan - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k221123:
+  name: Nissan - Correction richesse
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 200
+  unit: '%'
+k22110d:
+  name: Nissan - Consigne ralenti
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k222002:
+  name: Nissan - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k222003:
+  name: Nissan - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k222001:
+  name: Nissan - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k222007:
+  name: Nissan - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k222008:
+  name: Nissan - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k22240d:
+  name: Nissan - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k222005:
+  name: Nissan - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k222009:
+  name: Nissan - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k22240b:
+  name: Nissan - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222004:
+  name: Nissan - Couple moteur effectif
+  icon: mdi:engine
+  state_class: measurement
+  min: -100
+  max: 500
+  unit: Nm
+k22202e:
+  name: Nissan - Position pédale
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222024:
+  name: Nissan - Consigne ralenti
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k222006:
+  name: Nissan - Kilométrage total
+  icon: mdi:counter
+  state_class: total_increasing
+  min: 0
+  max: 999999
+  unit: km
+  device_class: distance
+k222057:
+  name: Nissan - Puissance alternateur
+  icon: mdi:flash
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: W
+  device_class: power
+k22242f:
+  name: Nissan - Position papillon
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222807:
+  name: Nissan - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k222804:
+  name: Nissan - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k222449:
+  name: Nissan - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k22244a:
+  name: Nissan - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k222422:
+  name: Nissan - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222401:
+  name: Nissan - Pression suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222841:
+  name: Nissan - Ratés cylindre 1
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222842:
+  name: Nissan - Ratés cylindre 2
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222843:
+  name: Nissan - Ratés cylindre 3
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222844:
+  name: Nissan - Ratés cylindre 4
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222402:
+  name: Nissan - Consigne suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3500
+  unit: mbar
+  device_class: pressure
+k222801:
+  name: Nissan - Pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k222802:
+  name: Nissan - Consigne pression rail
+  icon: mdi:gauge-full
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: bar
+  device_class: pressure
+k2224f2:
+  name: Nissan - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222806:
+  name: Nissan - Débit carburant
+  icon: mdi:fuel
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: mg/cp
+k222407:
+  name: Nissan - Position vanne EGR
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k22242c:
+  name: Nissan - FAP masse de suies
+  icon: mdi:smoke
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: g
+k222542:
+  name: Nissan - FAP pression différentielle
+  icon: mdi:gauge
+  state_class: measurement
+  min: -100
+  max: 1000
+  unit: mbar
+  device_class: pressure
+k22243b:
+  name: Nissan - Température avant catalyseur
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 1000
+  unit: °C
+  device_class: temperature
+k222486:
+  name: Nissan - FAP avancement régénération
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222481:
+  name: Nissan - FAP régénérations réussies
+  icon: mdi:car-info
+  state_class: measurement
+  min: 0
+  max: 255

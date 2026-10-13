@@ -1,0 +1,12 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+Lada Position papillon,Throttle,22242F,(A*256+B)/20,0,100,%,7E0
+Lada Avance allumage,Advance,222807,(A-63)/2.666,-24,72,°,7E0
+Lada Temps injection,InjTime,222804,(A*65536+B*256+C)*4/1000,0,50,ms,7E0
+Lada Sonde O2 amont,O2Up,222449,(A*256+B)/1000,0,1.2,V,7E0
+Lada Sonde O2 aval,O2Down,22244A,(A*256+B)/1000,0,1.2,V,7E0
+Lada Debit air,AirFlow,222422,(A*256+B)/20,0,800,kg/h,7E0
+Lada Pression suralimentation,Boost,222401,A*256+B,0,3000,mbar,7E0
+Lada Rates cylindre 1,Mis1,222841,A*256+B,0,65535,,7E0
+Lada Rates cylindre 2,Mis2,222842,A*256+B,0,65535,,7E0
+Lada Rates cylindre 3,Mis3,222843,A*256+B,0,65535,,7E0
+Lada Rates cylindre 4,Mis4,222844,A*256+B,0,65535,,7E0

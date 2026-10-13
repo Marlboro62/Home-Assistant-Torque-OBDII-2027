@@ -21,7 +21,7 @@ Intégration personnalisée qui reçoit les données OBD-II envoyées par l'appl
 - **PID perso à code partagé** (ex. bloc `21 01`) séparés en capteurs distincts
 - Position GPS (`device_tracker`), état « Torque connecté », diagnostics
 - Définitions de capteurs personnalisables via `/config/torque_sensor_definitions.yaml`
-- **PID Torque prêts à l'emploi** pour les Dacia ([`torque_pids/dacia`](torque_pids/dacia))
+- **PID Torque prêts à l'emploi** par constructeur : Renault, Dacia, Nissan, Lada, autres ([`torque_pids`](torque_pids))
 
 ## Installation
 
@@ -86,12 +86,19 @@ kd:
 
 ## PID Torque fournis
 
-| Dossier | Véhicules |
-|---|---|
-| [`torque_pids/dacia`](torque_pids/dacia) | Dacia Logan, Sandero, Duster, Dokker, Lodgy, Jogger — essence & diesel, 1ʳᵉ gén. (ligne K) et 2ᵉ gén. (CAN) |
+Le dossier [`torque_pids`](torque_pids) contient des PID constructeur prêts à importer dans Torque,
+classés par marque, avec les définitions Home Assistant correspondantes :
 
-Chaque dossier contient les CSV à importer dans Torque, un README (quel fichier pour quel
-moteur) et le fichier de définitions HA (noms, unités, icônes).
+| Dossier | Constructeur |
+|---|---|
+| [`renault`](torque_pids/renault) | Renault — CAN (essence, diesel, Hitachi) et ligne K (Siemens, Sagem, Delphi, Bosch) |
+| [`dacia`](torque_pids/dacia) | Dacia — Logan, Sandero, Duster, Dokker, Lodgy |
+| [`nissan`](torque_pids/nissan) | Nissan — moteurs Nissan et moteurs Renault |
+| [`lada`](torque_pids/lada) | Lada — Largus, Vesta / XRAY à moteur Renault |
+| [`autre`](torque_pids/autre) | Alpine A110, Mercedes Citan, Renault Samsung |
+
+> ℹ️ Source : base de diagnostic Renault DDT2000 de **février 2021**. Les modèles sortis
+> **après 2021** n'y figurent pas.
 
 ## PID perso à code partagé
 
@@ -133,7 +140,7 @@ Custom Home Assistant integration receiving OBD-II data from the **Torque Pro** 
 **Features**: one device per vehicle (`/api/torque-<vehicle-name>`), several vehicles on one
 phone (routed by Torque profile name), per-vehicle ignored PIDs, splitting of custom PIDs
 sharing the same request (e.g. `2101` → `k2101_<shortname>`), GPS `device_tracker`,
-ready-made Torque PID files for Dacia vehicles (`torque_pids/dacia`),
+ready-made Torque PID files per manufacturer — Renault, Dacia, Nissan, Lada, others (`torque_pids`, from the Renault DDT2000 database of February 2021; later models are not included),
 "Torque connected" binary sensor, diagnostics, custom definitions in
 `/config/torque_sensor_definitions.yaml`.
 

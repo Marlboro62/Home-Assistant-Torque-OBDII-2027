@@ -5,9 +5,10 @@ Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release)
 ## 2027.1.0 — version stable
 
 - Première version stable (contenu de 2027.1.0b0).
-- **Nouveau dossier `torque_pids/dacia/`** : PID Torque Dacia (Logan, Sandero, Duster, Dokker,
-  Lodgy, Jogger — essence et diesel, 1ʳᵉ génération ligne K et 2ᵉ génération CAN), issus de la
-  base Renault DDT2000, avec le fichier de définitions HA correspondant.
+- **Nouveau dossier `torque_pids/`** : PID Torque constructeur classés par marque
+  (`renault`, `dacia`, `nissan`, `lada`, `autre`), en CAN et en ligne K, avec les fichiers de
+  définitions Home Assistant. Source : base Renault DDT2000 de février 2021 — les modèles
+  sortis après 2021 n'y figurent pas.
 
 ## 2027.1.0b0 — pré-version
 

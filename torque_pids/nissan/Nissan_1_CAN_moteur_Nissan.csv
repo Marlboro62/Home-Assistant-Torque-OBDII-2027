@@ -1,0 +1,13 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+Nissan Regime moteur,Rpm,221201,(A*256+B)*12.5,0,8000,rpm,7E0
+Nissan Vitesse vehicule,Speed,221102,A*2,0,260,km/h,7E0
+Nissan Temp liquide refroidissement,Coolant,221101,A-50,-40,140,°C,7E0
+Nissan Temp huile moteur,OilTemp,22111F,A-50,-40,160,°C,7E0
+Nissan Temp air admission,Iat,221106,A-50,-40,120,°C,7E0
+Nissan Tension batterie,Batt,221103,A*0.08,8,16,V,7E0
+Nissan Avance allumage,Advance,221107,A,-10,60,°,7E0
+Nissan Temps injection,InjTime,221206,(A*256+B)/100,0,50,ms,7E0
+Nissan Debit air,AirFlow,221209,(A*256+B)/100,0,300,g/s,7E0
+Nissan Sonde O2 aval,O2Down,22111A,A/100,0,1.2,V,7E0
+Nissan Correction richesse,Alpha,221123,A,0,200,%,7E0
+Nissan Consigne ralenti,IdleTgt,22110D,A*12.5,0,2000,rpm,7E0

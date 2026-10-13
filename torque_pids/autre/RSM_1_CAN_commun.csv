@@ -1,0 +1,15 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+RSM Regime moteur,Rpm,222002,(A*256+B)/4,0,7000,rpm,7E0
+RSM Vitesse vehicule,Speed,222003,(A*256+B)/100,0,250,km/h,7E0
+RSM Temp liquide refroidissement,Coolant,222001,((A*256+B)-2730)/10,-40,140,°C,7E0
+RSM Temp huile moteur,OilTemp,222007,((A*256+B)-2730)/10,-40,160,°C,7E0
+RSM Temp carburant,FuelTemp,222008,((A*256+B)-2730)/10,-40,120,°C,7E0
+RSM Temp air admission,Iat,22240D,((A*256+B)-2730)/10,-40,120,°C,7E0
+RSM Tension batterie,Batt,222005,(A*256+B)/100,8,16,V,7E0
+RSM Pression atmospherique,Atmo,222009,A*256+B,700,1100,mbar,7E0
+RSM Pression collecteur,Map,22240B,A*256+B,0,3000,mbar,7E0
+RSM Couple moteur effectif,Torque,222004,((A*256+B)-12800)/32,-100,500,Nm,7E0
+RSM Position pedale,Pedal,22202E,(A*256+B)/800,0,100,%,7E0
+RSM Consigne ralenti,IdleTgt,222024,(A*256+B)/4,0,2000,rpm,7E0
+RSM Kilometrage total,Odo,222006,A*65536+B*256+C,0,999999,km,7E0
+RSM Puissance alternateur,Alt,222057,(A*256+B)*10,0,3000,W,7E0

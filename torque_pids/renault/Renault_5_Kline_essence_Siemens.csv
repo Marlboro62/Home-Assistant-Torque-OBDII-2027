@@ -1,0 +1,13 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+Renault Regime moteur,Rpm,21A9,A*256+B,0,7000,rpm,
+Renault Vitesse vehicule,Speed,21A9,J,0,250,km/h,
+Renault Temp eau,Coolant,21A9,F*0.625-40,-40,120,°C,
+Renault Temp air admission,Iat,21A9,G*0.625-40,-40,120,°C,
+Renault Tension batterie,Batt,21A9,C*0.032+8,8,16,V,
+Renault Pression collecteur,Map,21A9,D*3.7+103,100,1100,mbar,
+Renault Sonde O2 amont,O2Up,21A9,H*9.76/1000,0,1.2,V,
+Renault Sonde O2 aval,O2Down,21A9,I*9.76/1000,0,1.2,V,
+Renault Correction avance cliquetis,KnockCorr,21A9,N*0.375,0,96,°,
+Renault Avance allumage,Advance,21AA,H*0.375-23.625,-24,72,°,
+Renault Temps injection,InjTime,21AA,(F*256+G)*0.004,0,50,ms,
+Renault Correction richesse,Lambda,21AA,C,0,255,,

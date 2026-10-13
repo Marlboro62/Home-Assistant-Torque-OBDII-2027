@@ -1,0 +1,13 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+Renault Regime moteur,Rpm,21A3,(P*256+Q)/4,0,6000,rpm,
+Renault Vitesse vehicule,Speed,21A3,R,0,250,km/h,
+Renault Temp liquide refroidissement,Coolant,21A3,N-40,-40,140,°C,
+Renault Charge moteur,Load,21A3,M*100/255,0,100,%,
+Renault Pression suralimentation,Boost,21A0,(SIGNED(Q)*256+R),0,3500,mbar,
+Renault Pression atmospherique,Atmo,21A0,(SIGNED(O)*256+P),700,1100,mbar,
+Renault Pression rail,Rail,21A0,(SIGNED(Y)*256+Z)/10,0,2000,bar,
+Renault Tension batterie,Batt,21A0,(M*256+N)/1000,8,16,V,
+Renault Temp air admission,Iat,21A0,((I*256+J)-2730)/10,-40,120,°C,
+Renault Temp carburant,FuelTemp,21A0,((K*256+L)-2730)/10,-40,120,°C,
+Renault Position pedale,Pedal,21A0,(E*256+F)*100/65535,0,100,%,
+Renault Debit carburant injecte,FuelFlow,21A4,(SIGNED(U)*256+V)/100,0,100,mg/cp,

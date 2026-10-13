@@ -1,0 +1,13 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+Renault Pression suralimentation,Boost,222401,A*256+B,0,3500,mbar,7E0
+Renault Consigne suralimentation,BoostTgt,222402,A*256+B,0,3500,mbar,7E0
+Renault Pression rail,Rail,222801,A*256+B,0,2000,bar,7E0
+Renault Consigne pression rail,RailTgt,222802,A*256+B,0,2000,bar,7E0
+Renault Debit air,AirFlow,2224F2,(A*256+B)/10,0,800,kg/h,7E0
+Renault Debit carburant,FuelFlow,222806,(A*256+B)/100,0,100,mg/cp,7E0
+Renault Position vanne EGR,Egr,222407,(A*256+B)*0.0488,0,100,%,7E0
+Renault FAP masse de suies,Soot,22242C,(A*256+B)/100,0,100,g,7E0
+Renault FAP pression differentielle,FapDp,222542,((A*256+B)-32768),-100,1000,mbar,7E0
+Renault Temp avant catalyseur,TCat,22243B,((A*256+B)-2730)/10,-40,1000,°C,7E0
+Renault FAP avancement regeneration,RegenPct,222486,A*0.392156863,0,100,%,7E0
+Renault FAP regenerations reussies,RegenOk,222481,A,0,255,,7E0

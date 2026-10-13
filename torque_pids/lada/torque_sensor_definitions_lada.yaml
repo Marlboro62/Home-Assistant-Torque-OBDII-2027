@@ -1,0 +1,187 @@
+# Définitions des capteurs pour les PID Lada de ce dossier.
+# Copier (ou ajouter) dans /config/torque_sensor_definitions.yaml puis redémarrer HA.
+# Les PID ligne K (mode 21) partagent un même bloc : clé k21xx_<nomcourt>.
+k222002:
+  name: Lada - Régime moteur
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 7000
+  unit: rpm
+k222003:
+  name: Lada - Vitesse véhicule
+  icon: mdi:speedometer
+  state_class: measurement
+  min: 0
+  max: 250
+  unit: km/h
+  device_class: speed
+k222001:
+  name: Lada - Température liquide refroidissement
+  icon: mdi:coolant-temperature
+  state_class: measurement
+  min: -40
+  max: 140
+  unit: °C
+  device_class: temperature
+k222007:
+  name: Lada - Température huile moteur
+  icon: mdi:oil-temperature
+  state_class: measurement
+  min: -40
+  max: 160
+  unit: °C
+  device_class: temperature
+k222008:
+  name: Lada - Température carburant
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k22240d:
+  name: Lada - Température air admission
+  icon: mdi:thermometer
+  state_class: measurement
+  min: -40
+  max: 120
+  unit: °C
+  device_class: temperature
+k222005:
+  name: Lada - Tension batterie
+  icon: mdi:car-battery
+  state_class: measurement
+  min: 8
+  max: 16
+  unit: V
+  device_class: voltage
+k222009:
+  name: Lada - Pression atmosphérique
+  icon: mdi:gauge
+  state_class: measurement
+  min: 700
+  max: 1100
+  unit: mbar
+  device_class: pressure
+k22240b:
+  name: Lada - Pression collecteur
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222004:
+  name: Lada - Couple moteur effectif
+  icon: mdi:engine
+  state_class: measurement
+  min: -100
+  max: 500
+  unit: Nm
+k22202e:
+  name: Lada - Position pédale
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222024:
+  name: Lada - Consigne ralenti
+  icon: mdi:engine
+  state_class: measurement
+  min: 0
+  max: 2000
+  unit: rpm
+k222006:
+  name: Lada - Kilométrage total
+  icon: mdi:counter
+  state_class: total_increasing
+  min: 0
+  max: 999999
+  unit: km
+  device_class: distance
+k222057:
+  name: Lada - Puissance alternateur
+  icon: mdi:flash
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: W
+  device_class: power
+k22242f:
+  name: Lada - Position papillon
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 100
+  unit: '%'
+k222807:
+  name: Lada - Avance allumage
+  icon: mdi:flash
+  state_class: measurement
+  min: -24
+  max: 72
+  unit: °
+k222804:
+  name: Lada - Temps d'injection
+  icon: mdi:needle
+  state_class: measurement
+  min: 0
+  max: 50
+  unit: ms
+k222449:
+  name: Lada - Sonde O2 amont
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k22244a:
+  name: Lada - Sonde O2 aval
+  icon: mdi:sine-wave
+  state_class: measurement
+  min: 0
+  max: 1.2
+  unit: V
+  device_class: voltage
+k222422:
+  name: Lada - Débit air
+  icon: mdi:weather-windy
+  state_class: measurement
+  min: 0
+  max: 800
+  unit: kg/h
+k222401:
+  name: Lada - Pression suralimentation
+  icon: mdi:gauge
+  state_class: measurement
+  min: 0
+  max: 3000
+  unit: mbar
+  device_class: pressure
+k222841:
+  name: Lada - Ratés cylindre 1
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222842:
+  name: Lada - Ratés cylindre 2
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222843:
+  name: Lada - Ratés cylindre 3
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
+k222844:
+  name: Lada - Ratés cylindre 4
+  icon: mdi:engine-off
+  state_class: measurement
+  min: 0
+  max: 65535
