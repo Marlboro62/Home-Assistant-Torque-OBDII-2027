@@ -106,6 +106,8 @@ Quand plusieurs PID perso lisent la même réponse (ex. un bloc `21 01` dont on 
 plusieurs octets), Torque envoie la même clé `k2101` une fois par PID. L'intégration les
 sépare dans l'ordre de leurs **noms courts** (*ShortName* du CSV Torque) : chaque valeur
 devient `k2101_<nomcourt>` en minuscules, sans espaces ni symboles.
+Si seuls certains de ces PID sont cochés pour l'envoi, Torque transmet quand même les noms
+de tous : les valeurs reçues sont associées aux premiers noms, dans l'ordre.
 
 ```yaml
 # PID Torque : ShortName "OilTemp" et "Boost", ModeAndPID 2101

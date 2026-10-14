@@ -2,6 +2,14 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.5
+
+- Correction : séparation des PID perso à code partagé quand seuls certains sont envoyés.
+  Torque transmet les noms de tous les PID du code (ex. 44 PID `21 01`) mais seulement les
+  valeurs des PID sélectionnés (ex. 15), dans le même ordre : les valeurs sont désormais
+  associées aux premiers noms au lieu de rester non séparées.
+- Clés répétées avec des valeurs identiques (ex. GPS `kff1005`) : plus d'avertissement dans le journal.
+
 ## 2027.1.4
 
 - Correction : latitude et longitude GPS de nouveau affichées avec 6 décimales

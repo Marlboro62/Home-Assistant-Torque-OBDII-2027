@@ -495,10 +495,14 @@ class TorqueView(HomeAssistantView):
             shorts = known.get("short") or []
             if isinstance(value, list):
                 tag = f"{base}:{len(value)}"
-                if len(shorts) == len(value):
+                if shorts and len(value) <= len(shorts):
+                    # Torque envoie les noms de TOUS les PID perso du code (ex. 44),
+                    # ceux sélectionnés pour l'envoi en tête et dans le même ordre
+                    # que les valeurs (ex. 15) : on associe les N premiers noms.
+                    names = shorts[: len(value)]
                     fulls = known.get("full") or []
                     seen: set[str] = set()
-                    for i, (short, val) in enumerate(zip(shorts, value, strict=True)):
+                    for i, (short, val) in enumerate(zip(names, value, strict=True)):
                         sk = f"{base}_{_short_slug(short) or i}"
                         if sk in seen:
                             sk = f"{sk}{i}"
@@ -509,20 +513,27 @@ class TorqueView(HomeAssistantView):
                     if tag not in runtime.multi_logged:
                         runtime.multi_logged.add(tag)
                         _LOGGER.warning(
-                            "Torque '%s' : %s reçu %d fois -> séparé en %s",
-                            runtime.vehicle_name, key, len(value),
-                            ", ".join(f"{base}_{_short_slug(s)}" for s in shorts),
+                            "Torque '%s' : %s reçu %d fois (%d noms connus) -> séparé en %s",
+                            runtime.vehicle_name, key, len(value), len(shorts),
+                            ", ".join(f"{base}_{_short_slug(s)}" for s in names),
                         )
                 else:
                     out[key] = value[-1]
                     if tag not in runtime.multi_logged:
                         runtime.multi_logged.add(tag)
-                        _LOGGER.warning(
-                            "Torque '%s' : %s reçu %d fois mais %d nom(s) connu(s) "
-                            "(noms envoyés en début de trajet) : valeurs non séparées "
-                            "pour l'instant. Valeurs reçues : %s",
-                            runtime.vehicle_name, key, len(value), len(shorts), value,
-                        )
+                        if not shorts and len(set(map(str, value))) == 1:
+                            # Clé répétée à l'identique (ex. GPS) : rien à séparer
+                            _LOGGER.debug(
+                                "Torque '%s' : %s reçu %d fois (valeurs identiques)",
+                                runtime.vehicle_name, key, len(value),
+                            )
+                        else:
+                            _LOGGER.warning(
+                                "Torque '%s' : %s reçu %d fois mais %d nom(s) connu(s) "
+                                "(noms envoyés en début de trajet) : valeurs non séparées "
+                                "pour l'instant. Valeurs reçues : %s",
+                                runtime.vehicle_name, key, len(value), len(shorts), value,
+                            )
                 continue
             out[key] = value
             if len(shorts) > 1 and f"{base}:single" not in runtime.multi_logged:
