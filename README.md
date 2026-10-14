@@ -129,7 +129,7 @@ Astuce : fermer puis relancer Torque avant le trajet pour qu'il renvoie les noms
 - Journal HA : rechercher `torque_obd` (Paramètres → Système → Journaux)
 - Aucune donnée : vérifier l'URL dans Torque et que le profil porte le nom du véhicule
 - Rafraîchissement lent : réduire le nombre de PID dans « Sélectionner quoi surveiller »
-- Diagnostics : page de l'appareil → ⋮ → *Télécharger les diagnostics*
+- Diagnostics : Paramètres → Appareils et services → *Torque OBD-II* → ⋮ du véhicule → *Télécharger les diagnostics*
 
 ---
 
