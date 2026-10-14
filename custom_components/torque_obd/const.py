@@ -51,6 +51,43 @@ PID_GPS_SPEED: Final = "kff1001"
 # Signaux dispatcher
 SIGNAL_UPDATE: Final = DOMAIN + "_{}_update"
 
+# Décimales affichées par défaut selon l'unité, quand la définition n'en précise pas
+# (évite "27,4509803921569 %"). Une clé "precision" dans la définition reste prioritaire.
+DEFAULT_PRECISION_BY_UNIT: Final[dict[str, int]] = {
+    "%": 1,
+    "°C": 1,
+    "°F": 1,
+    "°": 1,
+    "V": 2,
+    "RPM": 0,
+    "rpm": 0,
+    "km/h": 0,
+    "mph": 0,
+    "km": 1,
+    "mi": 1,
+    "m": 1,
+    "s": 0,
+    "min": 0,
+    "kPa": 0,
+    "Pa": 0,
+    "psi": 1,
+    "bar": 2,
+    "mbar": 0,
+    "g": 0,
+    "g/s": 2,
+    "g/km": 0,
+    "mg/stroke": 2,
+    "L": 2,
+    "L/h": 2,
+    "mL/min": 1,
+    "km/L": 1,
+    "L/100km": 1,
+    "mpg": 1,
+    "Nm": 0,
+    "hp": 1,
+    "kW": 1,
+}
+
 # Nombre de chiffres hex des PID OBD-II standard (0x00-0xFF)
 STANDARD_PID_HEX_LENGTH: Final = 2
 
@@ -1152,6 +1189,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff125c": {
         "name": "Coût carburant (trajet)",
         "unit": None,
+        "precision": 2,
         "icon": "mdi:currency-usd",
         "device_class": None,
         "state_class": SensorStateClass.TOTAL_INCREASING,

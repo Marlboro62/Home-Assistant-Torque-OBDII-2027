@@ -17,6 +17,7 @@ from homeassistant.helpers.network import NoURLAvailableError, get_url
 from . import TorqueConfigEntry, TorqueRuntimeData
 from .const import (
     ATTRIBUTE_FIELDS,
+    DEFAULT_PRECISION_BY_UNIT,
     DOMAIN,
     METADATA_FIELD_PREFIXES,
     SIGNAL_UPDATE,
@@ -139,6 +140,10 @@ class TorqueSensor(RestoreSensor):
         self._attr_state_class = definition.get("state_class")
         if definition.get("precision") is not None:
             self._attr_suggested_display_precision = definition["precision"]
+        elif self._attr_native_unit_of_measurement in DEFAULT_PRECISION_BY_UNIT:
+            self._attr_suggested_display_precision = DEFAULT_PRECISION_BY_UNIT[
+                self._attr_native_unit_of_measurement
+            ]
         elif self._attr_device_class == SensorDeviceClass.VOLTAGE:
             # HA arrondit les volts à l'unité par défaut : 0,45 V -> "0 V"
             self._attr_suggested_display_precision = 2

@@ -2,6 +2,13 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.3
+
+- Nombre de décimales affichées par défaut selon l'unité (%, L/h, kW, km, s…) :
+  fini les valeurs du type « 27,4509803921569 % ». Le coût du trajet s'affiche avec 2 décimales.
+- Une clé `precision` dans `torque_sensor_definitions.yaml` reste prioritaire, tout comme
+  le réglage d'affichage choisi dans les paramètres d'une entité.
+
 ## 2027.1.2
 
 - Icône de l'intégration (`brand/icon.png`, versions claire et sombre) : l'icône s'affiche
