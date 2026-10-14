@@ -816,6 +816,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff1005": {
         "name": "Longitude GPS",
         "unit": "°",
+        "precision": 6,
         "icon": "mdi:crosshairs-gps",
         "device_class": None,
         "state_class": None,
@@ -823,6 +824,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff1006": {
         "name": "Latitude GPS",
         "unit": "°",
+        "precision": 6,
         "icon": "mdi:crosshairs-gps",
         "device_class": None,
         "state_class": None,
@@ -1063,6 +1065,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff123b": {
         "name": "Cap GPS",
         "unit": "°",
+        "precision": 0,
         "icon": "mdi:compass",
         "device_class": None,
         "state_class": None,
@@ -1439,6 +1442,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff1007": {
         "name": "Cap GPS (bearing)",
         "unit": "°",
+        "precision": 0,
         "icon": "mdi:compass-outline",
         "device_class": None,
         "state_class": None,

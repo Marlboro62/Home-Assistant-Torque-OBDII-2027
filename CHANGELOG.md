@@ -2,6 +2,11 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.4
+
+- Correction : latitude et longitude GPS de nouveau affichées avec 6 décimales
+  (la 2027.1.3 les arrondissait à 1 décimale, par exemple 49,4°). Cap GPS sans décimale.
+
 ## 2027.1.3
 
 - Nombre de décimales affichées par défaut selon l'unité (%, L/h, kW, km, s…) :
