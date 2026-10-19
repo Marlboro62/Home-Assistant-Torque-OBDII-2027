@@ -2,6 +2,11 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.6
+
+- Décimales par défaut ajoutées pour d'autres unités courantes des PID perso :
+  N·m, W, kg/h, ms, µs, °vil, mg/cp (ex. « 1,21875 N·m » devient « 1 N·m »).
+
 ## 2027.1.5
 
 - Correction : séparation des PID perso à code partagé quand seuls certains sont envoyés.
