@@ -2,6 +2,11 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.7
+
+Version stable : reprend la pré-version 2027.1.7b1, testée sur une installation réelle (import des
+définitions YAML d'un véhicule, modification d'une unité appliquée sans redémarrage).
+
 ## 2027.1.7b1
 
 - Nouveau : **définitions des capteurs éditables dans Home Assistant**, par véhicule. Le menu des
