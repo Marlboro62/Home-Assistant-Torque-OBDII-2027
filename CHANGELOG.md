@@ -2,6 +2,20 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.7b1
+
+- Nouveau : **définitions des capteurs éditables dans Home Assistant**, par véhicule. Le menu des
+  options (roue dentée) propose :
+  - **Ajouter ou modifier la définition d'un capteur** : choix du PID dans la liste de ceux reçus
+    (avec leur dernière valeur), puis nom, unité, icône, classes, min / max et décimales ;
+  - **Supprimer des définitions** : le capteur reprend la définition commune ;
+  - **Importer** depuis `torque_sensor_definitions.yaml` (tout, ou seulement les PID reçus du véhicule) ;
+  - **Exporter** dans `/config/torque_sensor_definitions_<véhicule>.yaml`.
+- Les définitions d'un véhicule priment sur le fichier YAML, qui reste lu comme avant.
+- Une définition modifiée recharge le véhicule : **plus besoin de redémarrer Home Assistant**.
+  Les noms appris et les autres options ne déclenchent pas de rechargement.
+- Tests automatiques du formulaire d'options et des définitions (`tests/`), lancés par la CI.
+
 ## 2027.1.6
 
 - Décimales par défaut ajoutées pour d'autres unités courantes des PID perso :

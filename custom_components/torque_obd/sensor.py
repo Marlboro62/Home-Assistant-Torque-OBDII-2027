@@ -14,7 +14,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.network import NoURLAvailableError, get_url
 
-from . import TorqueConfigEntry, TorqueRuntimeData
+from . import TorqueConfigEntry, TorqueRuntimeData, entry_sensor_definitions
 from .const import (
     ATTRIBUTE_FIELDS,
     DEFAULT_PRECISION_BY_UNIT,
@@ -58,7 +58,8 @@ async def async_setup_entry(
 ) -> None:
     """Crée les capteurs restaurés puis ceux découverts à la volée."""
     runtime = entry.runtime_data
-    definitions: dict[str, dict[str, Any]] = hass.data[DOMAIN]["sensor_definitions"]
+    # Défauts + YAML, puis définitions propres au véhicule (éditées dans ses options)
+    definitions = entry_sensor_definitions(hass, entry)
     known: set[str] = set()  # PID normalisés déjà créés
 
     def build(raw_key: str, name: str | None, initial: Any = None) -> TorqueSensor:

@@ -26,6 +26,7 @@ from .const import (
     CONF_IGNORED_PIDS,
     CONF_MULTI_NAMES,
     CONF_ROUTED_DEVICES,
+    CONF_SENSOR_DEFINITIONS,
     PENDING_MAX_ITEMS,
     PENDING_TIMEOUT_SECONDS,
     SESSION_TTL_SECONDS,
@@ -34,6 +35,7 @@ from .const import (
     SIGNAL_UPDATE,
     load_sensor_definitions,
     normalize_pid,
+    prepare_definition,
     vehicle_slug,
 )
 
@@ -64,6 +66,8 @@ class TorqueRuntimeData:
     # PID perso partageant un même code (ex. "21 01") : noms dans l'ordre d'envoi
     multi_names: dict[str, dict[str, list[str]]] = field(default_factory=dict)
     multi_logged: set[str] = field(default_factory=set)
+    # Définitions du véhicule au chargement : un changement dans les options déclenche un rechargement
+    definitions_snapshot: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def payload_name(self, normalized_pid: str) -> str | None:
         """Nom envoyé par Torque pour ce PID (nom complet en priorité)."""
@@ -82,6 +86,21 @@ def entry_aliases(entry: ConfigEntry) -> list[str]:
     if isinstance(raw, str):
         raw = raw.split(",")
     return [str(a).strip().lower() for a in raw if str(a).strip()]
+
+
+def entry_raw_definitions(entry: ConfigEntry) -> dict[str, dict[str, Any]]:
+    """Définitions de capteurs propres au véhicule (options), sous forme brute."""
+    raw = entry.options.get(CONF_SENSOR_DEFINITIONS) or {}
+    return {normalize_pid(str(pid)): dict(d) for pid, d in raw.items() if isinstance(d, dict)}
+
+
+def entry_sensor_definitions(hass: HomeAssistant, entry: ConfigEntry) -> dict[str, dict[str, Any]]:
+    """Définitions utilisées par les capteurs du véhicule : défauts + YAML, puis celles du véhicule."""
+    definitions = dict(hass.data[DOMAIN]["sensor_definitions"])
+    for pid, raw in entry_raw_definitions(entry).items():
+        if (prepared := prepare_definition(pid, raw)) is not None:
+            definitions[pid] = prepared
+    return definitions
 
 
 def entry_ignored_pids(entry: ConfigEntry) -> set[str]:
@@ -152,12 +171,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> bo
             k: dict(v) for k, v in (entry.options.get(CONF_MULTI_NAMES) or {}).items()
         },
     )
+    runtime.definitions_snapshot = entry_raw_definitions(entry)
     entry.runtime_data = runtime
     domain_data["slugs"][slug] = entry
+    entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     _LOGGER.info("Torque OBD-II '%s' listening on %s", vehicle_name, runtime.api_path)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
+
+
+async def _async_options_updated(hass: HomeAssistant, entry: TorqueConfigEntry) -> None:
+    """Définitions modifiées dans les options : recharge le véhicule (sans redémarrer HA).
+
+    Les autres options (noms appris, alias, PID ignorés) sont lues à la volée : pas de rechargement.
+    """
+    if entry_raw_definitions(entry) != entry.runtime_data.definitions_snapshot:
+        _LOGGER.info("Définitions des capteurs de '%s' modifiées : rechargement", entry.title)
+        hass.config_entries.async_schedule_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> bool:

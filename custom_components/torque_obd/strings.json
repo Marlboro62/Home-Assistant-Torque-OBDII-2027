@@ -22,13 +22,70 @@
   "options": {
     "step": {
       "init": {
+        "title": "Vehicle options",
+        "menu_options": {
+          "profiles": "Torque profiles and PIDs to ignore",
+          "pick_pid": "Add or edit a sensor definition",
+          "delete_definitions": "Remove sensor definitions",
+          "import_yaml": "Import from torque_sensor_definitions.yaml",
+          "export_yaml": "Export this vehicle's definitions (YAML)"
+        }
+      },
+      "profiles": {
         "title": "Torque profiles for this vehicle",
         "description": "The vehicle is matched automatically when the Torque profile has its name. Torque sometimes sends a numeric ID instead (e.g. 1966413…): such IDs are learned automatically and listed here. Add or remove entries (comma separated). PIDs to ignore: keys of PIDs belonging to another car (e.g. k2101, k2174), comma-separated. Their entities are removed.",
         "data": {
           "profile_aliases": "Torque profile names / IDs",
           "ignored_pids": "PIDs to ignore for this vehicle (e.g. k2101, k2174)"
         }
+      },
+      "pick_pid": {
+        "title": "Sensor definition",
+        "description": "Pick a PID received from this vehicle (key — name = last value, ✎ = already defined for this vehicle), or type a key (e.g. k222001, or 222001).",
+        "data": {
+          "pid": "PID"
+        }
+      },
+      "edit_definition": {
+        "title": "Definition of {pid}",
+        "description": "Applies to this vehicle only and takes precedence over torque_sensor_definitions.yaml. Saving reloads the vehicle: no Home Assistant restart needed. Values outside min / max (e.g. 255 or 655.35 sent when the ECU has no data) are ignored.",
+        "data": {
+          "name": "Name",
+          "unit": "Unit",
+          "icon": "Icon",
+          "device_class": "Device class",
+          "state_class": "State class",
+          "min": "Minimum valid value",
+          "max": "Maximum valid value",
+          "precision": "Decimals displayed"
+        }
+      },
+      "delete_definitions": {
+        "title": "Remove definitions",
+        "description": "The selected sensors go back to the shared definition (built-in or torque_sensor_definitions.yaml).",
+        "data": {
+          "pids": "Definitions to remove"
+        }
+      },
+      "import_yaml": {
+        "title": "Import definitions",
+        "description": "{file} contains {count} definition(s). They are copied into this vehicle's options, where you can then edit them.",
+        "data": {
+          "only_received": "Only PIDs received from this vehicle",
+          "overwrite": "Replace definitions already set for this vehicle"
+        }
       }
+    },
+    "error": {
+      "invalid_pid": "Invalid PID key: k followed by the hexadecimal code (e.g. k222001).",
+      "name_required": "The name is required.",
+      "min_above_max": "The maximum must be greater than the minimum."
+    },
+    "abort": {
+      "no_definitions": "No sensor definition is set for this vehicle yet.",
+      "yaml_missing": "No torque_sensor_definitions.yaml file (or it is empty) in the configuration folder.",
+      "yaml_invalid": "torque_sensor_definitions.yaml cannot be read: check its YAML syntax.",
+      "exported": "Definitions exported to {path}."
     }
   }
 }

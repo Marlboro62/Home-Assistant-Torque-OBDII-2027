@@ -22,13 +22,70 @@
   "options": {
     "step": {
       "init": {
+        "title": "Options du véhicule",
+        "menu_options": {
+          "profiles": "Profils Torque et PID à ignorer",
+          "pick_pid": "Ajouter ou modifier la définition d'un capteur",
+          "delete_definitions": "Supprimer des définitions",
+          "import_yaml": "Importer depuis torque_sensor_definitions.yaml",
+          "export_yaml": "Exporter les définitions de ce véhicule (YAML)"
+        }
+      },
+      "profiles": {
         "title": "Profils Torque de ce véhicule",
         "description": "Le véhicule est reconnu automatiquement quand le profil Torque porte son nom. Torque envoie parfois un identifiant numérique à la place (ex. 1966413…) : ces identifiants sont appris automatiquement et listés ici. Vous pouvez en ajouter ou en retirer (séparés par des virgules). PID à ignorer : clés des PID d'une autre voiture (ex. k2101, k2174), séparées par des virgules. Leurs entités sont supprimées.",
         "data": {
           "profile_aliases": "Noms / identifiants de profil Torque",
           "ignored_pids": "PID à ignorer pour ce véhicule (ex. k2101, k2174)"
         }
+      },
+      "pick_pid": {
+        "title": "Définition d'un capteur",
+        "description": "Choisissez un PID reçu de ce véhicule (clé — nom = dernière valeur, ✎ = déjà défini pour ce véhicule), ou saisissez une clé (ex. k222001, ou 222001).",
+        "data": {
+          "pid": "PID"
+        }
+      },
+      "edit_definition": {
+        "title": "Définition de {pid}",
+        "description": "Elle ne vaut que pour ce véhicule et prime sur torque_sensor_definitions.yaml. L'enregistrement recharge le véhicule : pas besoin de redémarrer Home Assistant. Les valeurs hors min / max (ex. 255 ou 655,35 envoyés quand le calculateur n'a pas la donnée) sont ignorées.",
+        "data": {
+          "name": "Nom",
+          "unit": "Unité",
+          "icon": "Icône",
+          "device_class": "Classe d'appareil",
+          "state_class": "Classe d'état",
+          "min": "Valeur minimale valide",
+          "max": "Valeur maximale valide",
+          "precision": "Décimales affichées"
+        }
+      },
+      "delete_definitions": {
+        "title": "Supprimer des définitions",
+        "description": "Les capteurs choisis reprennent la définition commune (intégrée ou torque_sensor_definitions.yaml).",
+        "data": {
+          "pids": "Définitions à supprimer"
+        }
+      },
+      "import_yaml": {
+        "title": "Importer des définitions",
+        "description": "{file} contient {count} définition(s). Elles sont recopiées dans les options de ce véhicule, où vous pourrez ensuite les modifier.",
+        "data": {
+          "only_received": "Seulement les PID reçus de ce véhicule",
+          "overwrite": "Remplacer les définitions déjà faites pour ce véhicule"
+        }
       }
+    },
+    "error": {
+      "invalid_pid": "Clé de PID invalide : k suivi du code hexadécimal (ex. k222001).",
+      "name_required": "Le nom est obligatoire.",
+      "min_above_max": "Le maximum doit être supérieur au minimum."
+    },
+    "abort": {
+      "no_definitions": "Aucune définition n'est encore faite pour ce véhicule.",
+      "yaml_missing": "Aucun fichier torque_sensor_definitions.yaml (ou fichier vide) dans le dossier de configuration.",
+      "yaml_invalid": "torque_sensor_definitions.yaml est illisible : vérifiez sa syntaxe YAML.",
+      "exported": "Définitions exportées dans {path}."
     }
   }
 }

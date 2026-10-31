@@ -32,6 +32,10 @@ CONF_IGNORED_PIDS: Final = "ignored_pids"
 CONF_MULTI_NAMES: Final = "multi_pid_names"
 CONF_AMBIGUOUS_PROFILES: Final = "ambiguous_profiles"
 CONF_ROUTED_DEVICES: Final = "routed_devices"
+# Définitions de capteurs propres au véhicule, éditées dans ses options (prioritaires sur le YAML)
+CONF_SENSOR_DEFINITIONS: Final = "sensor_definitions"
+# Champs d'une définition éditables dans les options
+DEFINITION_FIELDS: Final = ("name", "unit", "icon", "device_class", "state_class", "min", "max", "precision")
 
 # Aiguillage par profil Torque
 PENDING_TIMEOUT_SECONDS: Final = 600  # attente max d'un nom de profil reconnu
@@ -1519,6 +1523,50 @@ METADATA_FIELD_PREFIXES: Final = [
 ]
 
 
+def prepare_definition(pid: str, definition: Any) -> dict[str, Any] | None:
+    """Définition brute (YAML ou options du véhicule) -> définition utilisable par les capteurs.
+
+    Convertit device_class / state_class texte en classes HA et complète les champs optionnels.
+    Renvoie None si la définition est invalide (pas un dictionnaire ou sans nom).
+    """
+    if not isinstance(definition, dict):
+        _LOGGER.warning("Invalid definition for PID '%s' in custom sensor definitions. Skipping.", pid)
+        return None
+    if not definition.get("name"):
+        _LOGGER.warning(
+            "PID '%s' in custom sensor definitions missing required 'name' field. Skipping.", pid
+        )
+        return None
+
+    definition_copy = definition.copy()
+    for field, enum in (("device_class", SensorDeviceClass), ("state_class", SensorStateClass)):
+        value = definition_copy.get(field)
+        if isinstance(value, str) and value:
+            class_attr = getattr(enum, value.upper(), None)
+            if class_attr is None:
+                _LOGGER.warning("Unknown %s '%s' for PID '%s'. Setting to None.", field, value, pid)
+            definition_copy[field] = class_attr
+        elif value == "":
+            definition_copy[field] = None
+
+    definition_copy.setdefault("unit", None)
+    definition_copy.setdefault("icon", "mdi:car-info")
+    definition_copy.setdefault("device_class", None)
+    definition_copy.setdefault("state_class", None)
+    return definition_copy
+
+
+def definition_to_raw(definition: dict[str, Any]) -> dict[str, Any]:
+    """Définition utilisable -> forme brute (YAML / options) : classes HA en texte, champs vides omis."""
+    raw: dict[str, Any] = {}
+    for field in DEFINITION_FIELDS:
+        value = definition.get(field)
+        if value is None or value == "":
+            continue
+        raw[field] = getattr(value, "value", value)  # SensorDeviceClass.TEMPERATURE -> "temperature"
+    return raw
+
+
 def load_sensor_definitions(hass: HomeAssistant) -> dict[str, dict[str, Any]]:
     """Load sensor definitions from YAML file if it exists, merge with defaults.
     
@@ -1568,64 +1616,10 @@ def load_sensor_definitions(hass: HomeAssistant) -> dict[str, dict[str, Any]]:
         for raw_pid, definition in custom_definitions.items():
             # Normalisation : "kd" dans le YAML doit surcharger "k0d" des défauts
             pid = normalize_pid(str(raw_pid))
-            if not isinstance(definition, dict):
-                _LOGGER.warning(
-                    "Invalid definition for PID '%s' in custom sensor definitions. Skipping.",
-                    pid
-                )
+            definition_copy = prepare_definition(pid, definition)
+            if definition_copy is None:
                 continue
-            
-            # Validate required fields
-            if "name" not in definition:
-                _LOGGER.warning(
-                    "PID '%s' in custom sensor definitions missing required 'name' field. Skipping.",
-                    pid
-                )
-                continue
-            
-            # Convert string class names to actual classes if needed
-            definition_copy = definition.copy()
-            
-            # Handle device_class
-            if "device_class" in definition_copy:
-                device_class = definition_copy["device_class"]
-                if isinstance(device_class, str) and device_class:
-                    # Try to convert string to SensorDeviceClass
-                    # Use getattr with None default to safely check for attribute
-                    class_attr = getattr(SensorDeviceClass, device_class.upper(), None)
-                    if class_attr is not None:
-                        definition_copy["device_class"] = class_attr
-                    else:
-                        _LOGGER.warning(
-                            "Unknown device_class '%s' for PID '%s'. Setting to None.",
-                            device_class,
-                            pid
-                        )
-                        definition_copy["device_class"] = None
-            
-            # Handle state_class
-            if "state_class" in definition_copy:
-                state_class = definition_copy["state_class"]
-                if isinstance(state_class, str) and state_class:
-                    # Try to convert string to SensorStateClass
-                    # Use getattr with None default to safely check for attribute
-                    class_attr = getattr(SensorStateClass, state_class.upper(), None)
-                    if class_attr is not None:
-                        definition_copy["state_class"] = class_attr
-                    else:
-                        _LOGGER.warning(
-                            "Unknown state_class '%s' for PID '%s'. Setting to None.",
-                            state_class,
-                            pid
-                        )
-                        definition_copy["state_class"] = None
-            
-            # Add defaults for optional fields if not present
-            definition_copy.setdefault("unit", None)
-            definition_copy.setdefault("icon", "mdi:car-info")
-            definition_copy.setdefault("device_class", None)
-            definition_copy.setdefault("state_class", None)
-            
+
             # Track if this is new or override
             if pid in definitions:
                 merged_count += 1
@@ -1658,3 +1652,39 @@ def load_sensor_definitions(hass: HomeAssistant) -> dict[str, dict[str, Any]]:
         )
     
     return definitions
+
+def read_custom_definitions_file(hass: HomeAssistant) -> dict[str, dict[str, Any]] | None:
+    """Définitions brutes de torque_sensor_definitions.yaml (sans les défauts), clés normalisées.
+
+    None si le fichier n'existe pas ; lève yaml.YAMLError si son contenu est illisible.
+    """
+    config_path = hass.config.path(SENSOR_DEFINITIONS_FILE)
+    if not os.path.isfile(config_path):
+        return None
+    with open(config_path, "r", encoding="utf-8") as file:
+        content = yaml.safe_load(file) or {}
+    if not isinstance(content, dict):
+        raise yaml.YAMLError(f"{SENSOR_DEFINITIONS_FILE} must contain a dictionary")
+    return {
+        normalize_pid(str(pid)): definition
+        for pid, definition in content.items()
+        if isinstance(definition, dict) and definition.get("name")
+    }
+
+
+def write_vehicle_definitions_file(
+    hass: HomeAssistant, slug: str, definitions: dict[str, dict[str, Any]]
+) -> str:
+    """Écrit les définitions d'un véhicule dans /config/torque_sensor_definitions_<slug>.yaml.
+
+    Même format que torque_sensor_definitions.yaml : le fichier peut être partagé ou recopié.
+    """
+    path = hass.config.path(f"torque_sensor_definitions_{slug}.yaml")
+    header = (
+        f"# Définitions Torque du véhicule « {slug} », exportées depuis Home Assistant.\n"
+        "# Même format que torque_sensor_definitions.yaml.\n"
+    )
+    with open(path, "w", encoding="utf-8") as file:
+        file.write(header)
+        yaml.safe_dump(dict(sorted(definitions.items())), file, allow_unicode=True, sort_keys=False)
+    return path

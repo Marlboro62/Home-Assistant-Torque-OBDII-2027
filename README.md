@@ -83,13 +83,34 @@ Plusieurs voitures sur un téléphone : créer un profil Torque par voiture, ave
 que le véhicule dans HA. Une seule URL suffit, l'aiguillage se fait par le profil.
 
 ### Options du véhicule (roue dentée)
-- **Profils Torque** : noms / identifiants de profil associés au véhicule (appris automatiquement)
-- **PID à ignorer** : ex. `k2101, k2174, k2176` — les entités correspondantes sont supprimées
+- **Profils Torque et PID à ignorer** :
+  - profils : noms / identifiants de profil associés au véhicule (appris automatiquement) ;
+  - PID à ignorer : ex. `k2101, k2174, k2176`, les entités correspondantes sont supprimées.
+- **Ajouter ou modifier la définition d'un capteur** : voir ci-dessous.
+- **Supprimer des définitions**, **importer** depuis `torque_sensor_definitions.yaml`, **exporter** en YAML.
 
 ## Définitions personnalisées
 
-Noms, unités, icônes et limites de vos PID (standards ou perso mode 21/22…) se définissent dans
-`/config/torque_sensor_definitions.yaml` (modèle : `custom_components/torque_obd/torque_sensor_definitions.yaml.example`).
+Noms, unités, icônes et limites de vos PID (standards ou perso mode 21/22…).
+
+### Dans Home Assistant, par véhicule (depuis la 2027.1.7)
+
+Roue dentée du véhicule → **Ajouter ou modifier la définition d'un capteur** :
+
+1. Choisissez le PID dans la liste des PID reçus de ce véhicule. Chaque ligne affiche sa clé, son nom et sa dernière valeur, et ✎ marque ceux déjà définis. Vous pouvez aussi saisir une clé, par ex. `222001`.
+2. Renseignez le nom, l'unité, l'icône, les classes d'appareil et d'état, le minimum, le maximum et le nombre de décimales.
+3. Enregistrez : le véhicule se recharge, **sans redémarrer Home Assistant**.
+
+Ces définitions ne valent que pour ce véhicule (pratique avec plusieurs voitures sur un même téléphone) et priment sur le fichier YAML.
+
+- **Importer depuis torque_sensor_definitions.yaml** reprend les définitions du fichier, au choix seulement pour les PID reçus de ce véhicule.
+- **Exporter** écrit `/config/torque_sensor_definitions_<véhicule>.yaml`, au même format, à sauvegarder ou à partager.
+
+Astuce : les valeurs hors min / max sont ignorées. Utilisez-les pour écarter les valeurs que le calculateur envoie quand il n'a pas la donnée (255, 655,35, -51…).
+
+### Dans un fichier YAML (commun à tous les véhicules)
+
+Les définitions peuvent aussi se placer dans `/config/torque_sensor_definitions.yaml` (modèle : `custom_components/torque_obd/torque_sensor_definitions.yaml.example`).
 Redémarrer HA après modification. La clé est `k` + le code *ModeAndPID* de Torque, en minuscules.
 
 ```yaml
