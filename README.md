@@ -210,3 +210,19 @@ name, then in Torque Pro → Settings → Data Logging & Upload set the web serv
 
 ## Licence
 MIT — voir [`LICENSE`](LICENSE) (licence du projet d'origine conservée, © JOHLC).
+
+## Nom du projet et forks
+
+**Torque OBD-II 2027** est maintenu par [Marlboro62](https://github.com/Marlboro62) dans ce dépôt,
+qui est la seule source officielle de l'intégration (releases, HACS, support).
+
+La licence MIT autorise à copier, modifier et redistribuer le code. Si vous publiez une version modifiée :
+
+- gardez les mentions de copyright du fichier [`LICENSE`](LICENSE) (© JOHLC et © Marlboro62) ;
+- **donnez-lui un autre nom** et un autre domaine d'intégration (`torque_obd` est celui de ce dépôt),
+  pour que personne ne confonde les deux projets ni n'installe l'une à la place de l'autre ;
+- ne la présentez pas comme la version officielle et n'orientez pas vers ce dépôt les demandes
+  de support qui concernent votre version.
+
+Une correction ou une amélioration ? Les **pull requests** et les **issues** sont les bienvenues ici :
+elles profitent à tous les utilisateurs.
