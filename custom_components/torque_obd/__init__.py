@@ -569,12 +569,16 @@ class TorqueView(HomeAssistantView):
             out[key] = value
             if len(shorts) > 1 and f"{base}:single" not in runtime.multi_logged:
                 runtime.multi_logged.add(f"{base}:single")
-                _LOGGER.warning(
-                    "Torque '%s' : %d PID perso partagent le code %s mais Torque "
-                    "n'envoie qu'UNE valeur (%s). Séparation impossible. "
-                    "Clés reçues dans cet envoi : %s",
-                    runtime.vehicle_name, len(shorts), key, value,
-                    ", ".join(sorted(data))[:1500],
+                # Une seule valeur pour plusieurs noms : un seul de ces PID est coché
+                # pour l'envoi, ou un doublon existe dans Torque. La valeur reste
+                # sur la clé d'origine (aucune entité renommée).
+                _LOGGER.info(
+                    "Torque '%s' : le code %s porte %d noms de PID (%s) mais une seule "
+                    "valeur est envoyée (%s) ; elle reste sur %s. Si ces PID sont "
+                    "voulus, cochez-les tous pour l'envoi ; sinon supprimez le "
+                    "doublon dans Torque.",
+                    runtime.vehicle_name, key, len(shorts), ", ".join(shorts),
+                    value, key,
                 )
         return out
 

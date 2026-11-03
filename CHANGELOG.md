@@ -2,6 +2,13 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.1.8b1
+
+- Journal : le message « N PID perso partagent le code … mais Torque n'envoie qu'UNE valeur.
+  Séparation impossible » n'est plus un avertissement. Ce cas est sans conséquence (la valeur
+  reste sur sa clé d'origine) : il est noté en information, avec les noms des PID concernés
+  et la marche à suivre (cocher tous ces PID pour l'envoi, ou supprimer le doublon dans Torque).
+
 ## 2027.1.7
 
 Version stable : reprend la pré-version 2027.1.7b1, testée sur une installation réelle (import des
