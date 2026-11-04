@@ -2,6 +2,10 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1b2
+
+- Début de trajet manqué : véhicule reconnu à ses PID propres (voir 2027.2.1b1).
+
 ## 2027.2.1b1
 
 - **Trajet en cours au redémarrage de Home Assistant** : Torque n'envoie le nom du profil (le véhicule)
@@ -12,7 +16,10 @@ Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release)
 - Si le début du trajet n'a vraiment pas été reçu (pas de réseau au démarrage, par exemple), la
   notification s'intitule **« début de trajet manqué »** et explique la cause, au lieu de parler d'un
   profil inconnu. Les données restent ignorées pour ne pas mélanger deux véhicules.
-- Tests : session conservée au redémarrage, notification sans nom de profil.
+- **Début de trajet manqué** (HA arrêté quand le trajet démarre, cas du 04/11) : le véhicule est
+  reconnu à ses **PID propres** (PID perso qu'aucun autre véhicule n'a, ex. les PID Laguna). Les PID
+  communs (GPS, accéléromètre, PID standard) ne comptent pas : sans PID propre, rien n'est deviné.
+- Tests : session conservée au redémarrage, notification sans nom de profil, véhicule reconnu à ses PID.
 
 ## 2027.2.0
 

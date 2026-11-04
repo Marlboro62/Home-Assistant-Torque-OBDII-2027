@@ -479,6 +479,38 @@ class TorqueRouter:
                 self._notify_unknown_profiles(pend["profiles"])
         return expired
 
+    def _guess_by_pids(
+        self, items: list[tuple[str, dict[str, Any]]]
+    ) -> TorqueConfigEntry | None:
+        """Véhicule reconnu par ses PID propres (aucun autre véhicule ne les a).
+
+        Les PID communs (GPS, accéléromètre, PID standard présents sur les deux
+        voitures) ne comptent pas. Rien n'est deviné si les PID reçus désignent
+        plusieurs véhicules, ou aucun.
+        """
+        keys = {_base_pid(k) for _slug, data in items for k in data if k.startswith("k")}
+        if not keys:
+            return None
+        ent_reg = er.async_get(self.hass)
+        known: dict[str, set[str]] = {}
+        entries = {e.entry_id: e for e in self._entries().values()}
+        for entry_id, entry in entries.items():
+            prefix = f"{DOMAIN}_{entry_id}_"
+            pids = {
+                _base_pid(reg.unique_id[len(prefix):])
+                for reg in er.async_entries_for_config_entry(ent_reg, entry_id)
+                if reg.domain == "sensor"
+                and reg.unique_id.startswith(prefix)
+                and reg.unique_id[len(prefix):].startswith("k")
+            }
+            known[entry_id] = pids - set(entry_ignored_pids(entry))
+        candidates = []
+        for entry_id, pids in known.items():
+            others = set().union(*(v for k, v in known.items() if k != entry_id))
+            if keys & (pids - others):
+                candidates.append(entries[entry_id])
+        return candidates[0] if len(candidates) == 1 else None
+
     def _notify_unknown_profiles(self, profiles: set[str]) -> None:
         names = sorted(p for p in profiles if any(c.isalpha() for c in p))
         if not names:
@@ -576,9 +608,19 @@ class TorqueRouter:
                 )
                 if profile:
                     pend["profiles"].add(profile)
-                pend["items"].append((slug, data))
-                del pend["items"][:-PENDING_MAX_ITEMS]
-                return web.Response(text="OK!")
+                guess = self._guess_by_pids([*pend["items"], (slug, data)])
+                if guess is None:
+                    pend["items"].append((slug, data))
+                    del pend["items"][:-PENDING_MAX_ITEMS]
+                    return web.Response(text="OK!")
+                # Début de trajet manqué (HA arrêté au démarrage du trajet) : les PID
+                # perso reçus n'existent que sur un véhicule, on le reconnaît par eux.
+                entry, via_alias = guess, None
+                _LOGGER.info(
+                    "Trajet Torque sans nom de profil attribué au véhicule '%s' "
+                    "d'après ses PID",
+                    entry.runtime_data.vehicle_name,
+                )
 
             if session:
                 self._session_entry[session] = (entry.entry_id, now, via_alias)

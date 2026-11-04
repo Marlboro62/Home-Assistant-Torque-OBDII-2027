@@ -172,3 +172,38 @@ async def test_missing_profile_notification(hass: HomeAssistant) -> None:
     notes = persistent_notification._async_get_or_create_notifications(hass)
     assert list(notes) == ["torque_obd_profile_missing"]
     assert "(inconnu)" not in notes["torque_obd_profile_missing"]["message"]
+
+
+async def test_missed_trip_start_guessed_by_pids(hass: HomeAssistant, hass_client_no_auth) -> None:
+    """HA arrêté au démarrage du trajet : le véhicule est reconnu à ses PID propres."""
+    routed = {CONF_ROUTED_DEVICES: ["tel"]}
+    entries = {}
+    for entry_id, name in (("laguna_id", "Laguna"), ("slk_id", "SLK")):
+        entries[name] = MockConfigEntry(
+            domain=DOMAIN, unique_id=name.lower(), title=name, entry_id=entry_id, version=2,
+            data={"vehicle_name": name, CONF_WEBHOOK_ID: f"hook_{name.lower()}"}, options=routed,
+        )
+        entries[name].add_to_hass(hass)
+    reg = er.async_get(hass)
+    # k5 existe sur les deux véhicules ; k2101 (PID perso) seulement sur la Laguna
+    for name, pids in (("Laguna", ("k5", "k2101")), ("SLK", ("k5",))):
+        entry = entries[name]
+        for pid in pids:
+            reg.async_get_or_create(
+                "sensor", DOMAIN, f"{DOMAIN}_{entry.entry_id}_{pid}", config_entry=entry
+            )
+    assert await hass.config_entries.async_setup("laguna_id")
+    await hass.async_block_till_done()
+    router = hass.data[DOMAIN]["router"]
+
+    client = await hass_client_no_auth()
+    # PID commun seulement : rien n'est deviné, l'envoi attend
+    await client.get("/api/webhook/hook_slk", params={"session": "s9", "id": "tel", "k5": "80"})
+    assert "s9" in router._pending
+    # PID propre à la Laguna : session attribuée, envoi en attente livré
+    await client.get("/api/webhook/hook_slk", params={"session": "s9", "id": "tel", "k2101": "12"})
+    await hass.async_block_till_done()
+    assert "s9" not in router._pending
+    assert router._session_entry["s9"][0] == "laguna_id"
+    state = hass.states.get(reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_laguna_id_k5"))
+    assert state is not None and state.state == "80"
