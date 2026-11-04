@@ -2,6 +2,25 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.0b1
+
+Sécurité (revue HACS) : **l'adresse d'envoi devient un webhook privé**.
+
+- ⚠️ **Changement à faire dans Torque Pro** : l'ancienne adresse `/api/torque-<véhicule>` ne demandait
+  aucune authentification. Quiconque pouvait joindre Home Assistant pouvait déplacer le
+  `device_tracker` du véhicule, écrire n'importe quelle valeur de capteur, créer des entités, modifier
+  les options enregistrées ou publier des notifications. Elle est **supprimée**.
+- Chaque véhicule reçoit un **webhook Home Assistant à identifiant aléatoire** (`webhook.async_generate_id`).
+  L'adresse complète s'affiche à la fin de l'ajout du véhicule, puis dans ses options
+  (**Adresse à saisir dans Torque Pro**). Option **Créer une nouvelle adresse** si elle a fuité.
+- **Migration automatique** des véhicules existants (version 1 → 2) : adresse privée créée et
+  avertissement dans **Paramètres → Réparations**, qui disparaît une fois l'adresse affichée.
+- L'entité « URL Torque » est **supprimée** : elle exposait l'adresse à tous les utilisateurs.
+- **Diagnostics** : les options passent aussi par `async_redact_data` ; `routed_devices` (identifiants
+  Torque des téléphones) et l'identifiant du webhook sont masqués.
+- Tests : réception GET et POST par webhook, ancienne adresse supprimée, migration, nouvelle adresse,
+  aucune adresse dans les entités, diagnostics masqués.
+
 ## 2027.1.8b1
 
 - Journal : le message « N PID perso partagent le code … mais Torque n'envoie qu'UNE valeur.

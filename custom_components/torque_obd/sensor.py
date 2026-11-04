@@ -6,13 +6,11 @@ import math
 from typing import Any
 
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.network import NoURLAvailableError, get_url
 
 from . import TorqueConfigEntry, TorqueRuntimeData, entry_sensor_definitions
 from .const import (
@@ -73,7 +71,7 @@ async def async_setup_entry(
         known.add(norm)
         return TorqueSensor(entry.entry_id, runtime, raw_key, definition, initial)
 
-    entities: list[SensorEntity] = [TorqueAPIEndpointSensor(entry.entry_id, runtime)]
+    entities: list[SensorEntity] = []
 
     # --- Restauration des capteurs déjà connus (registre des entités) ---
     prefix = f"{DOMAIN}_{entry.entry_id}_"
@@ -213,38 +211,4 @@ class TorqueSensor(RestoreSensor):
         if value == self._attr_native_value:
             return  # aucun changement : on évite un événement d'état inutile
         self._attr_native_value = value
-        self.async_write_ha_state()
-
-
-class TorqueAPIEndpointSensor(SensorEntity):
-    """URL à saisir dans Torque Pro (Réglages → Journalisation → URL Webserver)."""
-
-    _attr_should_poll = False
-    _attr_has_entity_name = True
-    _attr_name = "URL Torque"
-    _attr_icon = "mdi:api"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, entry_id: str, runtime: TorqueRuntimeData) -> None:
-        """Initialize."""
-        self._runtime = runtime
-        self._attr_unique_id = f"{DOMAIN}_{entry_id}_api_endpoint"
-        self._attr_device_info = vehicle_device_info(entry_id, runtime.vehicle_name)
-
-    async def async_added_to_hass(self) -> None:
-        """Construit les URL interne et externe."""
-        path = self._runtime.api_path
-        urls: dict[str, str] = {}
-        for label, kwargs in (
-            ("url_externe", {"allow_internal": False}),
-            ("url_interne", {"allow_external": False}),
-        ):
-            try:
-                urls[label] = f"{get_url(self.hass, **kwargs)}{path}"
-            except NoURLAvailableError:
-                pass
-        self._attr_native_value = (
-            urls.get("url_externe") or urls.get("url_interne") or f"http://IP_HA:8123{path}"
-        )
-        self._attr_extra_state_attributes = urls
         self.async_write_ha_state()

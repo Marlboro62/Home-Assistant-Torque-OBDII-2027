@@ -26,6 +26,8 @@ SENSOR_DEFINITIONS_FILE: Final = "torque_sensor_definitions.yaml"
 # Configuration
 CONF_EMAIL: Final = "email"
 CONF_VEHICLE_NAME: Final = "vehicle_name"
+# Identifiant secret du webhook qui reçoit les envois de Torque Pro (un par véhicule)
+CONF_WEBHOOK_ID: Final = "webhook_id"
 CONF_PROFILE_ALIASES: Final = "profile_aliases"
 CONF_IGNORED_PIDS: Final = "ignored_pids"
 # Noms (dans l'ordre) des PID perso partageant un même code (ex. 9 PID "21 01")

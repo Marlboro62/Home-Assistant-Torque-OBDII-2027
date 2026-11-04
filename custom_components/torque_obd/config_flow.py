@@ -9,6 +9,7 @@ import voluptuous as vol
 import yaml
 
 from homeassistant import config_entries
+from homeassistant.components import webhook
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigFlowResult as FlowResult
@@ -21,6 +22,7 @@ from .const import (
     CONF_PROFILE_ALIASES,
     CONF_SENSOR_DEFINITIONS,
     CONF_VEHICLE_NAME,
+    CONF_WEBHOOK_ID,
     DEFINITION_FIELDS,
     DOMAIN,
     SENSOR_DEFINITIONS_FILE,
@@ -105,7 +107,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 class TorqueConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Torque OBD-II."""
 
-    VERSION = 1
+    VERSION = 2
 
     @staticmethod
     def async_get_options_flow(
@@ -147,8 +149,16 @@ class TorqueConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(normalized_name)
                 self._abort_if_unique_id_configured()
                 
+                # Webhook à identifiant aléatoire : seule l'adresse complète permet d'envoyer des données
+                from . import webhook_url  # pylint: disable=import-outside-toplevel
+
+                user_input[CONF_WEBHOOK_ID] = webhook.async_generate_id()
                 _LOGGER.info("Creating config entry for vehicle '%s'", info["title"])
-                return self.async_create_entry(title=info["title"], data=user_input)
+                return self.async_create_entry(
+                    title=info["title"],
+                    data=user_input,
+                    description_placeholders={"url": webhook_url(self.hass, user_input[CONF_WEBHOOK_ID])},
+                )
 
         return self.async_show_form(
             step_id="user",
@@ -168,8 +178,34 @@ class TorqueOptionsFlow(config_entries.OptionsFlow):
         """Menu des options."""
         return self.async_show_menu(
             step_id="init",
-            menu_options=["profiles", "pick_pid", "delete_definitions", "import_yaml", "export_yaml"],
+            menu_options=["torque_url", "profiles", "pick_pid", "delete_definitions", "import_yaml", "export_yaml", "new_url"],
         )
+
+    # ------------------------------------------------------------- adresse Torque
+    async def async_step_torque_url(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+        """Affiche l'adresse à saisir dans Torque Pro (visible des seuls administrateurs)."""
+        from . import webhook_url  # pylint: disable=import-outside-toplevel
+        from homeassistant.helpers import issue_registry as ir  # pylint: disable=import-outside-toplevel
+
+        # L'utilisateur a vu la nouvelle adresse : l'avertissement de migration n'a plus lieu d'être
+        ir.async_delete_issue(self.hass, DOMAIN, f"webhook_url_{self.config_entry.entry_id}")
+        return self.async_abort(
+            reason="torque_url",
+            description_placeholders={"url": webhook_url(self.hass, self.config_entry.data[CONF_WEBHOOK_ID])},
+        )
+
+    async def async_step_new_url(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+        """Nouvelle adresse (ex. si elle a été partagée par erreur) : l'ancienne cesse de fonctionner."""
+        if user_input is None:
+            return self.async_show_form(step_id="new_url", data_schema=vol.Schema({}))
+        from . import webhook_url  # pylint: disable=import-outside-toplevel
+
+        new_id = webhook.async_generate_id()
+        self.hass.config_entries.async_update_entry(
+            self.config_entry, data={**self.config_entry.data, CONF_WEBHOOK_ID: new_id}
+        )
+        self.hass.config_entries.async_schedule_reload(self.config_entry.entry_id)
+        return self.async_abort(reason="torque_url", description_placeholders={"url": webhook_url(self.hass, new_id)})
 
     # ------------------------------------------------------------------ profils
     async def async_step_profiles(self, user_input: dict[str, Any] | None = None) -> FlowResult:

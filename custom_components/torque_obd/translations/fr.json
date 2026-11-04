@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Configurer Torque OBD-II",
-        "description": "Configurez votre véhicule. Son nom sert à créer une URL unique à saisir dans Torque Pro.",
+        "description": "Configurez votre véhicule pour l'intégration Torque OBD-II. Une adresse privée (webhook) est créée pour lui : elle s'affiche à la fin de la configuration.",
         "data": {
           "vehicle_name": "Nom du véhicule (ex. : Ma voiture)",
           "email": "Adresse e-mail Torque (facultatif, sert de filtre si Torque l'envoie)"
@@ -17,6 +17,9 @@
     },
     "abort": {
       "already_configured": "Ce véhicule (ou un nom donnant la même URL) est déjà configuré."
+    },
+    "create_entry": {
+      "default": "Véhicule ajouté.\n\nDans Torque Pro : **Réglages → Journalisation et envoi → URL du serveur Web**, saisissez :\n\n`{url}`\n\nGardez cette adresse privée : toute personne qui la connaît peut envoyer des données pour ce véhicule. Vous pouvez la réafficher (ou en créer une nouvelle) depuis les options du véhicule."
     }
   },
   "options": {
@@ -24,11 +27,13 @@
       "init": {
         "title": "Options du véhicule",
         "menu_options": {
+          "torque_url": "Adresse à saisir dans Torque Pro",
           "profiles": "Profils Torque et PID à ignorer",
           "pick_pid": "Ajouter ou modifier la définition d'un capteur",
           "delete_definitions": "Supprimer des définitions",
           "import_yaml": "Importer depuis torque_sensor_definitions.yaml",
-          "export_yaml": "Exporter les définitions de ce véhicule (YAML)"
+          "export_yaml": "Exporter les définitions de ce véhicule (YAML)",
+          "new_url": "Créer une nouvelle adresse (l'actuelle cesse de fonctionner)"
         }
       },
       "profiles": {
@@ -74,6 +79,10 @@
           "only_received": "Seulement les PID reçus de ce véhicule",
           "overwrite": "Remplacer les définitions déjà faites pour ce véhicule"
         }
+      },
+      "new_url": {
+        "title": "Nouvelle adresse Torque Pro",
+        "description": "Une nouvelle adresse aléatoire est créée et l'adresse actuelle cesse aussitôt de fonctionner. Il faudra saisir la nouvelle adresse dans Torque Pro, sur chaque téléphone qui envoie des données pour ce véhicule."
       }
     },
     "error": {
@@ -85,7 +94,14 @@
       "no_definitions": "Aucune définition n'est encore faite pour ce véhicule.",
       "yaml_missing": "Aucun fichier torque_sensor_definitions.yaml (ou fichier vide) dans le dossier de configuration.",
       "yaml_invalid": "torque_sensor_definitions.yaml est illisible : vérifiez sa syntaxe YAML.",
-      "exported": "Définitions exportées dans {path}."
+      "exported": "Définitions exportées dans {path}.",
+      "torque_url": "Dans Torque Pro : **Réglages → Journalisation et envoi → URL du serveur Web**, saisissez :\n\n`{url}`\n\nGardez cette adresse privée : toute personne qui la connaît peut envoyer des données pour ce véhicule."
+    }
+  },
+  "issues": {
+    "webhook_url_changed": {
+      "title": "Torque OBD-II : nouvelle adresse pour {vehicle}",
+      "description": "Pour des raisons de sécurité, Torque OBD-II n'accepte plus les données sur l'ancienne adresse `/api/torque-…`, qui ne demandait aucune authentification. Le véhicule **{vehicle}** a désormais sa propre adresse privée (webhook).\n\nOuvrez **Paramètres → Appareils et services → Torque OBD-II**, cliquez sur la roue dentée de **{vehicle}** et choisissez **Adresse à saisir dans Torque Pro**, puis copiez-la dans Torque Pro (**Réglages → Journalisation et envoi → URL du serveur Web**). Cet avertissement disparaît une fois l'adresse affichée."
     }
   }
 }

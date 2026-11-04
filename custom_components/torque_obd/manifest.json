@@ -9,7 +9,7 @@
   ],
   "config_flow": true,
   "dependencies": [
-    "http"
+    "webhook"
   ],
   "documentation": "https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027",
   "integration_type": "device",
@@ -19,5 +19,5 @@
     "custom_components.torque_obd"
   ],
   "requirements": [],
-  "version": "2027.1.8b1"
+  "version": "2027.2.0b1"
 }

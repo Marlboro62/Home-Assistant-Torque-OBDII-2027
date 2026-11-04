@@ -17,12 +17,13 @@ from custom_components.torque_obd.const import (
 )
 
 PID = "k222001"
+WEBHOOK_ID = "test_webhook_renault"
 
 
 async def _setup(hass: HomeAssistant, options: dict | None = None) -> MockConfigEntry:
     entry = MockConfigEntry(
-        domain=DOMAIN, unique_id="renault", title="Renault",
-        data={"vehicle_name": "Renault"}, options=options or {},
+        domain=DOMAIN, unique_id="renault", title="Renault", version=2,
+        data={"vehicle_name": "Renault", "webhook_id": WEBHOOK_ID}, options=options or {},
     )
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
@@ -32,7 +33,7 @@ async def _setup(hass: HomeAssistant, options: dict | None = None) -> MockConfig
 
 async def _send(hass_client, **values) -> None:
     client = await hass_client()
-    resp = await client.get("/api/torque-renault", params={"session": "1", "id": "tel", **values})
+    resp = await client.get(f"/api/webhook/{WEBHOOK_ID}", params={"session": "1", "id": "tel", **values})
     assert resp.status == 200
 
 

@@ -21,14 +21,14 @@ This document describes how the Torque OBD-II integration works internally.
 │  Home Assistant                     │
 │                                     │
 │  ┌─────────────────────────────┐   │
-│  │ /api/torque-{slug}          │   │ ◄─── ONE HTTP view, routed by slug
+│  │ /api/webhook/<id> (per vehicle)│   │ ◄─── one webhook per vehicle, random id
 │  │  (slug = vehicle name)      │   │      (no auth)
-│  │  TorqueView                 │   │
+│  │  TorqueRouter               │   │
 │  └───────────┬──────────────────┘   │
 │              │                      │
 │              ▼                      │
 │  ┌─────────────────────────────┐   │
-│  │  TorqueView (per vehicle)   │   │ ◄─── Receives data
+│  │  TorqueRouter (shared)      │   │ ◄─── Receives data
 │  │  Handler                    │   │      Processes all incoming data
 │  └───────────┬──────────────────┘   │
 │              │                      │
@@ -54,7 +54,7 @@ This document describes how the Torque OBD-II integration works internally.
    - Data is sent periodically to configured URL
 
 2. **HTTP Request to Home Assistant**
-   - Torque sends HTTP POST or GET request to vehicle-specific endpoint (e.g., `/api/torque-2025-ford-escape`)
+   - Torque sends HTTP POST or GET request to the vehicle's webhook (`/api/webhook/<random id>`)
    - Request contains form data with vehicle parameters:
      - `eml`: Email identifier
      - `k5`: Vehicle speed
@@ -63,7 +63,7 @@ This document describes how the Torque OBD-II integration works internally.
      - And many more PIDs...
 
 3. **Data Reception & Routing**
-   - `TorqueView` for that specific vehicle receives the HTTP request
+   - the vehicle's webhook handler passes the request to the shared `TorqueRouter`
    - Processes all incoming data without email validation (Torque does not reliably send email)
    - Stores data in `hass.data`
 
@@ -101,7 +101,7 @@ custom_components/torque_obd/
 
 - **Purpose**: Integration entry point and HTTP endpoint
 - **Key Classes**:
-  - `TorqueView`: Handles HTTP requests from Torque app
+  - `TorqueRouter`: routes Torque requests (received through each vehicle's webhook)
 - **Key Functions**:
   - `async_setup_entry()`: Sets up integration instance
   - `async_unload_entry()`: Cleans up on removal
@@ -180,7 +180,7 @@ Configuration is stored as a config entry with:
 
 The integration supports multiple vehicles:
 1. Each vehicle configured with unique vehicle name
-2. Each vehicle gets its own unique HTTP endpoint (e.g., `/api/torque-2025-ford-escape`)
+2. Each vehicle gets its own webhook with a random id (`/api/webhook/<id>`)
 3. Data is routed by endpoint URL, not by email (Torque does not reliably send email)
 4. Each vehicle gets its own set of sensors (created dynamically per PID)
 5. Devices grouped by vehicle name in UI
@@ -202,6 +202,6 @@ To add new sensors:
 3. No changes needed to `sensor.py` or other files
 
 To modify data handling:
-1. Edit `_handle_request()` in `TorqueView` class
+1. Edit `process()` in the `TorqueRouter` class
 2. Add custom processing before dispatcher send
 3. Store additional data in `hass.data[DOMAIN][entry_id]`

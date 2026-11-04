@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Set up Torque OBD-II",
-        "description": "Configure your vehicle for Torque OBD-II integration. The vehicle name will be used to create a unique API endpoint.",
+        "description": "Configure your vehicle for Torque OBD-II integration. A private webhook address is created for it: it is shown at the end of the setup.",
         "data": {
           "vehicle_name": "Vehicle Name (e.g., 2025 Ford Escape)",
           "email": "Email Address (optional)"
@@ -17,6 +17,9 @@
     },
     "abort": {
       "already_configured": "This vehicle name is already configured."
+    },
+    "create_entry": {
+      "default": "Vehicle added.\n\nIn Torque Pro: **Settings → Data Logging & Upload → Webserver URL**, enter:\n\n`{url}`\n\nKeep this address private: anyone who knows it can send data for this vehicle. You can show it again (or generate a new one) from the vehicle options."
     }
   },
   "options": {
@@ -24,11 +27,13 @@
       "init": {
         "title": "Vehicle options",
         "menu_options": {
+          "torque_url": "Address to enter in Torque Pro",
           "profiles": "Torque profiles and PIDs to ignore",
           "pick_pid": "Add or edit a sensor definition",
           "delete_definitions": "Remove sensor definitions",
           "import_yaml": "Import from torque_sensor_definitions.yaml",
-          "export_yaml": "Export this vehicle's definitions (YAML)"
+          "export_yaml": "Export this vehicle's definitions (YAML)",
+          "new_url": "Generate a new address (the current one stops working)"
         }
       },
       "profiles": {
@@ -74,6 +79,10 @@
           "only_received": "Only PIDs received from this vehicle",
           "overwrite": "Replace definitions already set for this vehicle"
         }
+      },
+      "new_url": {
+        "title": "New Torque Pro address",
+        "description": "A new random address is generated and the current one stops working immediately. You will have to enter the new address in Torque Pro on every phone that sends data for this vehicle."
       }
     },
     "error": {
@@ -85,7 +94,14 @@
       "no_definitions": "No sensor definition is set for this vehicle yet.",
       "yaml_missing": "No torque_sensor_definitions.yaml file (or it is empty) in the configuration folder.",
       "yaml_invalid": "torque_sensor_definitions.yaml cannot be read: check its YAML syntax.",
-      "exported": "Definitions exported to {path}."
+      "exported": "Definitions exported to {path}.",
+      "torque_url": "In Torque Pro: **Settings → Data Logging & Upload → Webserver URL**, enter:\n\n`{url}`\n\nKeep this address private: anyone who knows it can send data for this vehicle."
+    }
+  },
+  "issues": {
+    "webhook_url_changed": {
+      "title": "Torque OBD-II: new address for {vehicle}",
+      "description": "For security, Torque OBD-II no longer accepts data on the old `/api/torque-…` address, which required no authentication. Vehicle **{vehicle}** now has its own private webhook address.\n\nOpen **Settings → Devices & services → Torque OBD-II**, click the cog of **{vehicle}** and choose **Address to enter in Torque Pro**, then copy it into Torque Pro (**Settings → Data Logging & Upload → Webserver URL**). This warning disappears once the address has been displayed."
     }
   }
 }

@@ -10,12 +10,16 @@ from typing import Any, Callable
 
 from aiohttp import web
 
-from homeassistant.components import persistent_notification
-from homeassistant.components.http import HomeAssistantView
+from homeassistant.components import persistent_notification, webhook
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_validation as cv, device_registry as dr
+from homeassistant.helpers import (
+    config_validation as cv,
+    device_registry as dr,
+    entity_registry as er,
+    issue_registry as ir,
+)
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.util import dt as dt_util
 
@@ -31,6 +35,7 @@ from .const import (
     PENDING_TIMEOUT_SECONDS,
     SESSION_TTL_SECONDS,
     CONF_VEHICLE_NAME,
+    CONF_WEBHOOK_ID,
     DOMAIN,
     SIGNAL_UPDATE,
     load_sensor_definitions,
@@ -55,7 +60,7 @@ class TorqueRuntimeData:
     vehicle_name: str
     email: str
     slug: str
-    api_path: str
+    webhook_id: str
     data: dict[str, Any] = field(default_factory=dict)
     sensor_names: dict[str, dict[str, str | None]] = field(default_factory=dict)
     last_seen: datetime | None = None
@@ -123,6 +128,42 @@ def _query_to_dict(query: Any) -> dict[str, Any]:
     return out
 
 
+def webhook_url(hass: HomeAssistant, webhook_id: str) -> str:
+    """Adresse complète à saisir dans Torque Pro (externe si disponible, sinon interne)."""
+    try:
+        return webhook.async_generate_url(hass, webhook_id)
+    except Exception:  # pylint: disable=broad-except
+        # Aucune URL de Home Assistant connue : chemin seul, à compléter par l'utilisateur
+        return f"http://IP_HA:8123{webhook.async_generate_path(webhook_id)}"
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Version 1 -> 2 : l'adresse /api/torque-<véhicule> (sans authentification) devient un webhook
+    à identifiant aléatoire. L'utilisateur doit reporter la nouvelle adresse dans Torque Pro."""
+    if entry.version > 2:
+        return False
+    if entry.version == 1:
+        hass.config_entries.async_update_entry(
+            entry, data={**entry.data, CONF_WEBHOOK_ID: webhook.async_generate_id()}, version=2
+        )
+        ir.async_create_issue(
+            hass,
+            DOMAIN,
+            f"webhook_url_{entry.entry_id}",
+            is_fixable=False,
+            is_persistent=True,
+            severity=ir.IssueSeverity.WARNING,
+            translation_key="webhook_url_changed",
+            translation_placeholders={"vehicle": entry.title},
+        )
+        _LOGGER.warning(
+            "Torque OBD-II '%s' : nouvelle adresse d'envoi (webhook). Reportez-la dans Torque Pro "
+            "(options du véhicule → Adresse à saisir dans Torque Pro)",
+            entry.title,
+        )
+    return True
+
+
 def _short_slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", name.lower())
 
@@ -153,20 +194,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> bo
         )
         _LOGGER.debug("Loaded %d sensor definitions", len(domain_data["sensor_definitions"]))
 
-    # Une seule vue HTTP pour tous les véhicules : /api/torque-{slug}
-    # (une vue aiohttp ne peut pas être retirée ; l'enregistrer une seule fois
-    # évite les doublons de routes à chaque rechargement de l'intégration)
-    if not domain_data.get("view_registered"):
-        hass.http.register_view(TorqueView(hass))
-        domain_data["view_registered"] = True
+    # Un aiguilleur commun à tous les véhicules (sessions et profils Torque partagés),
+    # alimenté par un webhook par véhicule : l'identifiant aléatoire du webhook est le secret
+    if "router" not in domain_data:
+        domain_data["router"] = TorqueRouter(hass)
+    router: TorqueRouter = domain_data["router"]
 
     vehicle_name = entry.data[CONF_VEHICLE_NAME]
     slug = vehicle_slug(vehicle_name)
+    webhook_id = entry.data[CONF_WEBHOOK_ID]
     runtime = TorqueRuntimeData(
         vehicle_name=vehicle_name,
         email=(entry.data.get(CONF_EMAIL) or "").strip().lower(),
         slug=slug,
-        api_path=f"/api/torque-{slug}",
+        webhook_id=webhook_id,
         multi_names={
             k: dict(v) for k, v in (entry.options.get(CONF_MULTI_NAMES) or {}).items()
         },
@@ -175,7 +216,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> bo
     entry.runtime_data = runtime
     domain_data["slugs"][slug] = entry
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
-    _LOGGER.info("Torque OBD-II '%s' listening on %s", vehicle_name, runtime.api_path)
+
+    # Ancienne entité « URL Torque » (elle exposait l'adresse d'envoi à tous les utilisateurs)
+    ent_reg = er.async_get(hass)
+    if old := ent_reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_{entry.entry_id}_api_endpoint"):
+        ent_reg.async_remove(old)
+
+    async def _handle_webhook(hass: HomeAssistant, hook_id: str, request: web.Request) -> web.Response:
+        """Torque envoie par défaut en GET (query string), parfois en POST (formulaire)."""
+        if request.method == "POST":
+            data = _query_to_dict(await request.post())
+        else:
+            data = _query_to_dict(request.query)
+        return router.process(slug, data)
+
+    webhook.async_register(
+        hass, DOMAIN, f"Torque OBD-II {vehicle_name}", webhook_id, _handle_webhook,
+        allowed_methods=["GET", "POST"],
+    )
+    entry.async_on_unload(lambda: webhook.async_unregister(hass, webhook_id))
+    _LOGGER.info("Torque OBD-II '%s' : webhook enregistré", vehicle_name)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
@@ -199,10 +259,15 @@ async def async_unload_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> b
     return unload_ok
 
 
-class TorqueView(HomeAssistantView):
-    """Reçoit les envois de Torque Pro pour tous les véhicules configurés.
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Véhicule supprimé : retire l'avertissement de changement d'adresse."""
+    ir.async_delete_issue(hass, DOMAIN, f"webhook_url_{entry.entry_id}")
 
-    Aiguillage (l'URL d'envoi de Torque est commune à tous les profils) :
+
+class TorqueRouter:
+    """Reçoit les envois de Torque Pro (via le webhook de chaque véhicule) et les aiguille.
+
+    Aiguillage (l'URL d'envoi de Torque est commune à tous les profils d'un téléphone) :
       1. profileName = nom d'un véhicule HA, ou alias de profil connu ;
       2. sinon, la session Torque (champ "session") déjà associée à un véhicule ;
       3. sinon, pour un téléphone qui utilise l'aiguillage par profil (déjà vu
@@ -214,10 +279,6 @@ class TorqueView(HomeAssistantView):
          attente expirée (profil inconnu) : données ignorées + notification.
     """
 
-    url = "/api/torque-{slug}"
-    name = "api:torque_obd"
-    requires_auth = False
-
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize the view."""
         self.hass = hass
@@ -226,14 +287,6 @@ class TorqueView(HomeAssistantView):
         self._pending: dict[str, dict[str, Any]] = {}
         self._ambiguous: set[str] = set()
         self._notified_profiles: set[str] = set()
-
-    async def get(self, request: web.Request, slug: str) -> web.Response:
-        """Torque envoie par défaut en GET (query string)."""
-        return self._process(slug, _query_to_dict(request.query))
-
-    async def post(self, request: web.Request, slug: str) -> web.Response:
-        """Envoi en POST (formulaire)."""
-        return self._process(slug, _query_to_dict(await request.post()))
 
     # ------------------------------------------------------------------ routage
     def _entries(self) -> dict[str, TorqueConfigEntry]:
@@ -424,7 +477,7 @@ class TorqueView(HomeAssistantView):
             notification_id=f"torque_obd_profile_{vehicle_slug(names[0]) or 'inconnu'}",
         )
 
-    def _process(self, slug: str, data: dict[str, Any]) -> web.Response:
+    def process(self, slug: str, data: dict[str, Any]) -> web.Response:
         """Traite un envoi. Répond toujours « OK! » : sinon Torque réessaie en boucle."""
         try:
             now = time.monotonic()
@@ -591,8 +644,8 @@ class TorqueView(HomeAssistantView):
             if slug not in self._warned_slugs:
                 self._warned_slugs.add(slug)
                 _LOGGER.warning(
-                    "Données Torque reçues sur /api/torque-%s mais aucun véhicule "
-                    "ne correspond. Vérifiez l'URL configurée dans Torque Pro",
+                    "Données Torque reçues pour '%s' mais aucun véhicule ne "
+                    "correspond. Vérifiez l'adresse configurée dans Torque Pro",
                     slug,
                 )
             return

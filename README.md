@@ -43,7 +43,7 @@ Intégration personnalisée qui reçoit les données OBD-II envoyées par l'appl
 
 ## Fonctionnalités
 
-- Un appareil par véhicule, avec sa propre URL : `/api/torque-<nom-du-vehicule>`
+- Un appareil par véhicule, avec sa propre **adresse privée** (webhook Home Assistant à identifiant aléatoire)
 - **Plusieurs voitures sur un même téléphone** : le véhicule est choisi selon le profil Torque
 - **PID à ignorer** par véhicule (options de l'intégration)
 - **PID perso à code partagé** (ex. bloc `21 01`) séparés en capteurs distincts
@@ -72,22 +72,40 @@ Copier `custom_components/torque_obd` dans `/config/custom_components/`, puis re
 
 1. Paramètres → Appareils et services → **Ajouter une intégration** → *Torque OBD-II*
 2. Nom du véhicule = **nom exact du profil Torque** (ex. `Ma voiture`)
-3. Dans Torque Pro → Réglages → *Enregistrement et envoi de données* :
+3. À la fin de l'ajout, Home Assistant affiche l'**adresse à saisir dans Torque Pro**, de la forme
+   `https://<votre-ha>/api/webhook/<identifiant-aléatoire>`. Elle reste consultable ensuite :
+   roue dentée du véhicule → **Adresse à saisir dans Torque Pro**.
+4. Dans Torque Pro → Réglages → *Enregistrement et envoi de données* :
    - **Envoyer au serveur web** : activé
-   - **URL du serveur Web** : `http://<ip-ha>:8123/api/torque-<nom-du-vehicule>`
-     (ou l'adresse externe en HTTPS)
+   - **URL du serveur Web** : l'adresse affichée par Home Assistant
    - **Email utilisateur** : laisser vide
    - **Sélectionner quoi surveiller** : cocher les PID à envoyer (les moins possible)
 
 Plusieurs voitures sur un téléphone : créer un profil Torque par voiture, avec le même nom
-que le véhicule dans HA. Une seule URL suffit, l'aiguillage se fait par le profil.
+que le véhicule dans HA. Une seule adresse suffit (celle de n'importe lequel de vos véhicules),
+l'aiguillage se fait par le profil.
+
+> 🔒 **Gardez cette adresse privée** : elle sert de clé. Toute personne qui la connaît peut envoyer
+> des données pour vos véhicules. Elle n'apparaît dans aucune entité ni dans les diagnostics.
+> Si elle a été partagée par erreur : roue dentée du véhicule → **Créer une nouvelle adresse**
+> (l'ancienne cesse aussitôt de fonctionner).
+
+### Mise à jour depuis la 2027.1.x
+
+L'ancienne adresse `/api/torque-<nom-du-vehicule>`, qui ne demandait aucune authentification,
+**n'existe plus**. Après la mise à jour, chaque véhicule reçoit automatiquement son adresse privée
+et un avertissement apparaît dans **Paramètres → Réparations**. Ouvrez la roue dentée du véhicule
+→ **Adresse à saisir dans Torque Pro**, puis copiez-la dans Torque Pro : l'avertissement disparaît.
+L'entité « URL Torque » est supprimée (elle exposait l'adresse à tous les utilisateurs).
 
 ### Options du véhicule (roue dentée)
+- **Adresse à saisir dans Torque Pro** : l'adresse privée du véhicule.
 - **Profils Torque et PID à ignorer** :
   - profils : noms / identifiants de profil associés au véhicule (appris automatiquement) ;
   - PID à ignorer : ex. `k2101, k2174, k2176`, les entités correspondantes sont supprimées.
 - **Ajouter ou modifier la définition d'un capteur** : voir ci-dessous.
 - **Supprimer des définitions**, **importer** depuis `torque_sensor_definitions.yaml`, **exporter** en YAML.
+- **Créer une nouvelle adresse** : remplace l'adresse privée (l'ancienne cesse de fonctionner).
 
 ## Définitions personnalisées
 
@@ -188,7 +206,7 @@ Astuce : fermer puis relancer Torque avant le trajet pour qu'il renvoie les noms
 
 Custom Home Assistant integration receiving OBD-II data from the **Torque Pro** Android app.
 
-**Features**: one device per vehicle (`/api/torque-<vehicle-name>`), several vehicles on one
+**Features**: one device per vehicle, each with its own private address (Home Assistant webhook with a random id), several vehicles on one
 phone (routed by Torque profile name), per-vehicle ignored PIDs, splitting of custom PIDs
 sharing the same request (e.g. `2101` → `k2101_<shortname>`), GPS `device_tracker`,
 ready-made Torque PID files per manufacturer — Renault, Dacia, Nissan, Lada, others (`torque_pids`, from the Renault DDT2000 database of February 2021; later models are not included),
@@ -199,8 +217,14 @@ ready-made Torque PID files per manufacturer — Renault, Dacia, Nissan, Lada, o
 (category *Integration*), install, restart. Enable beta versions for pre-releases.
 
 **Setup**: add the *Torque OBD-II* integration, use the exact Torque profile name as vehicle
-name, then in Torque Pro → Settings → Data Logging & Upload set the web server URL to
-`http://<ha-ip>:8123/api/torque-<vehicle-name>` and leave the email empty.
+name. At the end of the setup, Home Assistant shows the address to enter in Torque Pro
+(`https://<your-ha>/api/webhook/<random-id>`); it is also available later in the vehicle options
+(**Address to enter in Torque Pro**). In Torque Pro → Settings → Data Logging & Upload set the web
+server URL to that address and leave the email empty. Keep it private: it acts as a key.
+
+**Upgrading from 2027.1.x**: the old unauthenticated `/api/torque-<vehicle-name>` address is gone.
+Each vehicle gets its private address automatically and a warning appears in **Settings → Repairs**:
+open the vehicle options → **Address to enter in Torque Pro** and copy it into Torque Pro.
 
 ---
 
