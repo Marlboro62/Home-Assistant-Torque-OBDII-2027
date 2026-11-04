@@ -206,4 +206,4 @@ async def test_missed_trip_start_guessed_by_pids(hass: HomeAssistant, hass_clien
     assert "s9" not in router._pending
     assert router._session_entry["s9"][0] == "laguna_id"
     state = hass.states.get(reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_laguna_id_k5"))
-    assert state is not None and state.state == "80"
+    assert state is not None and float(state.state) == 80.0
