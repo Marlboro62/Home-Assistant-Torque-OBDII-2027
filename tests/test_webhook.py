@@ -36,12 +36,12 @@ async def test_webhook_get_and_post(hass: HomeAssistant, hass_client_no_auth) ->
     assert await resp.text() == "OK!"
     await hass.async_block_till_done()
     entity_id = _pid_entity(hass, entry)
-    assert entity_id and hass.states.get(entity_id).state == "87"
+    assert entity_id and float(hass.states.get(entity_id).state) == 87
 
     resp = await client.post("/api/webhook/hook_laguna", data={"session": "1", "id": "tel", PID: "91"})
     assert resp.status == 200
     await hass.async_block_till_done()
-    assert hass.states.get(entity_id).state == "91"
+    assert float(hass.states.get(entity_id).state) == 91
 
 
 async def test_old_unauthenticated_path_is_gone(hass: HomeAssistant, hass_client_no_auth) -> None:
@@ -102,7 +102,7 @@ async def test_new_url_replaces_webhook(hass: HomeAssistant, hass_client_no_auth
     assert _pid_entity(hass, entry) is None
     await client.get(f"/api/webhook/{new_id}", params={"session": "1", "id": "tel", PID: "60"})
     await hass.async_block_till_done()
-    assert hass.states.get(_pid_entity(hass, entry)).state == "60"
+    assert float(hass.states.get(_pid_entity(hass, entry)).state) == 60
 
 
 async def test_config_flow_generates_webhook(hass: HomeAssistant) -> None:
