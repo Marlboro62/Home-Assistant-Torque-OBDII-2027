@@ -2,6 +2,10 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.0
+
+Version stable : reprend la pré-version 2027.2.0b1 (webhook privé par véhicule, diagnostics masqués), testée sur une installation réelle (migration de deux véhicules, avertissements dans les Réparations, affichage de l'adresse, nouvelles adresses saisies dans Torque Pro).
+
 ## 2027.2.0b1
 
 Sécurité (revue HACS) : **l'adresse d'envoi devient un webhook privé**.
