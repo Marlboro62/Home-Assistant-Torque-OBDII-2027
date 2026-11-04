@@ -2,6 +2,18 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1b1
+
+- **Trajet en cours au redémarrage de Home Assistant** : Torque n'envoie le nom du profil (le véhicule)
+  qu'au démarrage du trajet. Après un redémarrage de HA en cours de route, un téléphone à plusieurs
+  profils voyait le reste du trajet ignoré, avec la notification « profil non reconnu : **(inconnu)** ».
+  L'association session → véhicule est maintenant enregistrée (`.storage/torque_obd.sessions`, écrite à
+  l'arrêt de HA, gardée 6 h) : le trajet continue sur le bon véhicule.
+- Si le début du trajet n'a vraiment pas été reçu (pas de réseau au démarrage, par exemple), la
+  notification s'intitule **« début de trajet manqué »** et explique la cause, au lieu de parler d'un
+  profil inconnu. Les données restent ignorées pour ne pas mélanger deux véhicules.
+- Tests : session conservée au redémarrage, notification sans nom de profil.
+
 ## 2027.2.0
 
 Version stable : reprend la pré-version 2027.2.0b1 (webhook privé par véhicule, diagnostics masqués), testée sur une installation réelle (migration de deux véhicules, avertissements dans les Réparations, affichage de l'adresse, nouvelles adresses saisies dans Torque Pro).

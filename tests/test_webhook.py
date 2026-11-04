@@ -133,3 +133,42 @@ async def test_diagnostics_redacted(hass: HomeAssistant) -> None:
     assert "hook_laguna" not in text
     assert diag["options"][CONF_ROUTED_DEVICES] == "**REDACTED**"
     assert diag["entry"][CONF_WEBHOOK_ID] == "**REDACTED**"
+
+
+async def test_session_survives_restart(hass: HomeAssistant, hass_client_no_auth, hass_storage) -> None:
+    """Trajet en cours au redémarrage de HA : la session enregistrée garde son véhicule."""
+    import time
+
+    hass_storage[f"{DOMAIN}.sessions"] = {
+        "version": 1, "minor_version": 1, "key": f"{DOMAIN}.sessions",
+        "data": {"s1": ["slk_id", time.time() - 60, None]},
+    }
+    routed = {CONF_ROUTED_DEVICES: ["tel"]}
+    for entry_id, name in (("laguna_id", "Laguna"), ("slk_id", "SLK")):
+        MockConfigEntry(
+            domain=DOMAIN, unique_id=name.lower(), title=name, entry_id=entry_id, version=2,
+            data={"vehicle_name": name, CONF_WEBHOOK_ID: f"hook_{name.lower()}"}, options=routed,
+        ).add_to_hass(hass)
+    assert await hass.config_entries.async_setup("laguna_id")
+    await hass.async_block_till_done()
+
+    client = await hass_client_no_auth()
+    # Sans nom de profil, envoyé sur l'adresse de la Laguna : la session désigne la SLK
+    await client.get("/api/webhook/hook_laguna", params={"session": "s1", "id": "tel", PID: "70"})
+    await hass.async_block_till_done()
+    reg = er.async_get(hass)
+    assert reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_slk_id_{PID}") is not None
+    assert reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_laguna_id_{PID}") is None
+
+
+async def test_missing_profile_notification(hass: HomeAssistant) -> None:
+    """Aucun nom de profil reçu : message « début de trajet manqué », pas « (inconnu) »."""
+    from homeassistant.components import persistent_notification
+
+    await _setup(hass)
+    router = hass.data[DOMAIN]["router"]
+    router._notify_unknown_profiles({"1966413"})
+    router._notify_unknown_profiles(set())
+    notes = persistent_notification._async_get_or_create_notifications(hass)
+    assert list(notes) == ["torque_obd_profile_missing"]
+    assert "(inconnu)" not in notes["torque_obd_profile_missing"]["message"]

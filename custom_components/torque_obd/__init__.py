@@ -21,6 +21,7 @@ from homeassistant.helpers import (
     issue_registry as ir,
 )
 from homeassistant.helpers.dispatcher import async_dispatcher_send
+from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 
 from .const import (
@@ -198,6 +199,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: TorqueConfigEntry) -> bo
     # alimenté par un webhook par véhicule : l'identifiant aléatoire du webhook est le secret
     if "router" not in domain_data:
         domain_data["router"] = TorqueRouter(hass)
+        await domain_data["router"].async_load()
     router: TorqueRouter = domain_data["router"]
 
     vehicle_name = entry.data[CONF_VEHICLE_NAME]
@@ -287,6 +289,30 @@ class TorqueRouter:
         self._pending: dict[str, dict[str, Any]] = {}
         self._ambiguous: set[str] = set()
         self._notified_profiles: set[str] = set()
+        # Association session -> véhicule conservée au redémarrage de HA : Torque
+        # n'envoie le nom du profil qu'au début du trajet, un redémarrage en cours
+        # de route ferait sinon ignorer tout le reste du trajet.
+        self._store: Store[dict[str, list[Any]]] = Store(hass, 1, f"{DOMAIN}.sessions")
+
+    async def async_load(self) -> None:
+        """Recharge les sessions en cours (enregistrées à l'arrêt de HA)."""
+        stored = await self._store.async_load() or {}
+        now, wall = time.monotonic(), time.time()
+        for session, item in stored.items():
+            try:
+                entry_id, seen, alias = item
+                age = wall - float(seen)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= age < SESSION_TTL_SECONDS:
+                self._session_entry[session] = (str(entry_id), now - age, alias)
+
+    def _sessions_to_store(self) -> dict[str, list[Any]]:
+        now, wall = time.monotonic(), time.time()
+        return {
+            session: [entry_id, wall - (now - ts), alias]
+            for session, (entry_id, ts, alias) in self._session_entry.items()
+        }
 
     # ------------------------------------------------------------------ routage
     def _entries(self) -> dict[str, TorqueConfigEntry]:
@@ -454,7 +480,10 @@ class TorqueRouter:
         return expired
 
     def _notify_unknown_profiles(self, profiles: set[str]) -> None:
-        names = sorted(p for p in profiles if any(c.isalpha() for c in p)) or ["(inconnu)"]
+        names = sorted(p for p in profiles if any(c.isalpha() for c in p))
+        if not names:
+            self._notify_missing_profile()
+            return
         key = ",".join(names)
         if key in self._notified_profiles:
             return
@@ -475,6 +504,30 @@ class TorqueRouter:
             ),
             title="Torque OBD-II : profil non reconnu",
             notification_id=f"torque_obd_profile_{vehicle_slug(names[0]) or 'inconnu'}",
+        )
+
+    def _notify_missing_profile(self) -> None:
+        """Trajet sans nom de profil : ce n'est pas un véhicule inconnu."""
+        if "" in self._notified_profiles:
+            return
+        self._notified_profiles.add("")
+        _LOGGER.warning(
+            "Trajet Torque reçu sans nom de profil (début de trajet manqué) : "
+            "données ignorées jusqu'au prochain démarrage de Torque"
+        )
+        persistent_notification.async_create(
+            self.hass,
+            (
+                "Torque envoie des données d'un trajet dont le début n'a pas été reçu : "
+                "le nom du profil (le véhicule) n'est envoyé qu'au démarrage du trajet. "
+                "Comme ce téléphone a plusieurs profils, ces données sont ignorées pour "
+                "ne pas les mélanger à un autre véhicule.\n\nCause habituelle : Home "
+                "Assistant a redémarré, ou le téléphone n'avait pas de réseau, au "
+                "démarrage du trajet. Tout reprend au prochain démarrage de Torque "
+                "(ou en relançant la journalisation dans Torque Pro)."
+            ),
+            title="Torque OBD-II : début de trajet manqué",
+            notification_id="torque_obd_profile_missing",
         )
 
     def process(self, slug: str, data: dict[str, Any]) -> web.Response:
@@ -529,6 +582,8 @@ class TorqueRouter:
 
             if session:
                 self._session_entry[session] = (entry.entry_id, now, via_alias)
+                # Écriture différée (et forcée à l'arrêt de HA)
+                self._store.async_delay_save(self._sessions_to_store, 60)
                 if (pend := self._pending.pop(session, None)) is not None:
                     self._learn_aliases(entry, pend["profiles"])
                     for _old_slug, old_data in pend["items"]:
