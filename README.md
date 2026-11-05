@@ -29,7 +29,7 @@
 # Torque OBD-II pour Home Assistant
 
 [![Release](https://img.shields.io/github/v/release/Marlboro62/Home-Assistant-Torque-OBDII-2027?include_prereleases&label=version)](https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027/releases)
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz/)
 [![Validate](https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027/actions/workflows/validate.yml/badge.svg)](https://github.com/Marlboro62/Home-Assistant-Torque-OBDII-2027/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/github/license/Marlboro62/Home-Assistant-Torque-OBDII-2027)](LICENSE)
 
