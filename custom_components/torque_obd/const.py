@@ -981,6 +981,7 @@ SENSOR_DEFINITIONS: Final = {
         "icon": "mdi:car-speed-limiter",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
+        "precision": 2,
     },
     "kff1221": {
         "name": "Capteur d'accélération (axe Y)",
@@ -988,6 +989,7 @@ SENSOR_DEFINITIONS: Final = {
         "icon": "mdi:car-speed-limiter",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
+        "precision": 2,
     },
     "kff1222": {
         "name": "Capteur d'accélération (axe Z)",
@@ -995,6 +997,7 @@ SENSOR_DEFINITIONS: Final = {
         "icon": "mdi:car-speed-limiter",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
+        "precision": 2,
     },
     "kff1223": {
         "name": "Capteur d'accélération (total)",
@@ -1002,6 +1005,7 @@ SENSOR_DEFINITIONS: Final = {
         "icon": "mdi:car-speed-limiter",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
+        "precision": 2,
     },
     "kff1225": {
         "name": "Couple moteur",

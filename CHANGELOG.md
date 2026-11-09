@@ -2,6 +2,11 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1b3
+
+- **Accéléromètre** : les axes X/Y/Z et le total s'affichaient arrondis à l'entier (`-1 g`, `0 g`),
+  car l'unité `g` (grammes) est réglée à 0 décimale. Ils sont maintenant affichés avec 2 décimales.
+
 ## 2027.2.1b2
 
 - Début de trajet manqué : véhicule reconnu à ses PID propres (voir 2027.2.1b1).
