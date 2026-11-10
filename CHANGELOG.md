@@ -2,6 +2,11 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1b4
+
+- **Coût par km** (instantané et trajet) : affichés avec 3 décimales au lieu de
+  `0,752873536271741`.
+
 ## 2027.2.1b3
 
 - **Accéléromètre** : les axes X/Y/Z et le total s'affichaient arrondis à l'entier (`-1 g`, `0 g`),

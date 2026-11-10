@@ -1316,6 +1316,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff126d": {
         "name": "Coût par km (instantané)",
         "unit": None,
+        "precision": 3,
         "icon": "mdi:currency-eur",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
@@ -1323,6 +1324,7 @@ SENSOR_DEFINITIONS: Final = {
     "kff126e": {
         "name": "Coût par km (trajet)",
         "unit": None,
+        "precision": 3,
         "icon": "mdi:currency-eur",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
