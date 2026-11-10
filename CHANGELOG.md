@@ -2,6 +2,12 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1b5
+
+- **Unités des coûts** : « Coût carburant (trajet) » s'affiche en `€` et « Coût par km » en `€/km`
+  (avant : nombre sans unité). Pour une autre devise, surcharger `unit` dans
+  `torque_sensor_definitions.yaml` (clés `kff125c`, `kff126d`, `kff126e`).
+
 ## 2027.2.1b4
 
 - **Coût par km** (instantané et trajet) : affichés avec 3 décimales au lieu de

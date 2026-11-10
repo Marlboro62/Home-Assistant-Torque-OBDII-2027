@@ -1209,7 +1209,7 @@ SENSOR_DEFINITIONS: Final = {
     },
     "kff125c": {
         "name": "Coût carburant (trajet)",
-        "unit": None,
+        "unit": "€",
         "precision": 2,
         "icon": "mdi:currency-usd",
         "device_class": None,
@@ -1315,7 +1315,7 @@ SENSOR_DEFINITIONS: Final = {
     },
     "kff126d": {
         "name": "Coût par km (instantané)",
-        "unit": None,
+        "unit": "€/km",
         "precision": 3,
         "icon": "mdi:currency-eur",
         "device_class": None,
@@ -1323,7 +1323,7 @@ SENSOR_DEFINITIONS: Final = {
     },
     "kff126e": {
         "name": "Coût par km (trajet)",
-        "unit": None,
+        "unit": "€/km",
         "precision": 3,
         "icon": "mdi:currency-eur",
         "device_class": None,
