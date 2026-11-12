@@ -658,7 +658,11 @@ class TorqueRouter:
                     names = [str(v).strip() for v in value]
                     if runtime.multi_names.get(base, {}).get(fld) != names:
                         runtime.multi_names.setdefault(base, {})[fld] = names
-                        changed = fld != "unit"
+                        # Une liste d'unités traitée après les noms ne doit pas
+                        # annuler l'enregistrement : les noms seraient perdus au
+                        # prochain redémarrage de HA.
+                        if fld != "unit":
+                            changed = True
                     break
         if changed:
             self.hass.config_entries.async_update_entry(

@@ -2,6 +2,14 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.2b1
+
+- **PID à code partagé** (ex. `22 22 01`) : les noms appris n'étaient pas toujours enregistrés.
+  Quand Torque envoyait les unités après les noms, l'enregistrement était annulé : la séparation
+  marchait jusqu'au redémarrage de Home Assistant, puis le journal indiquait « reçu N fois mais
+  0 nom(s) connu(s) » jusqu'au prochain lancement de Torque. Les noms sont maintenant conservés.
+- Test : noms enregistrés quand les unités suivent, séparation après redémarrage.
+
 ## 2027.2.1
 
 Version stable : reprend les pré-versions 2027.2.1b1 à 2027.2.1b5.
