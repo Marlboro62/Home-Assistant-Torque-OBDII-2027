@@ -2,7 +2,7 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
-## À venir
+## 2027.2.2b1
 
 - **PID à code partagé** (ex. `22 22 01`) : les noms appris n'étaient pas toujours enregistrés.
   Quand Torque envoyait les unités après les noms, l'enregistrement était annulé : la séparation
