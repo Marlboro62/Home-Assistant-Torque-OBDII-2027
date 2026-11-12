@@ -2,6 +2,19 @@
 
 Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release).
 
+## 2027.2.1
+
+Version stable : reprend les pré-versions 2027.2.1b1 à 2027.2.1b5.
+
+- **Trajet en cours au redémarrage de Home Assistant** : l'association session → véhicule est
+  conservée (`.storage/torque_obd.sessions`, gardée 6 h), le trajet continue sur le bon véhicule.
+- **Début de trajet manqué** : le véhicule est reconnu à ses PID propres ; sinon, la notification
+  s'intitule « début de trajet manqué » au lieu de « profil non reconnu ».
+- **Affichage** : accéléromètre à 2 décimales, coût par km à 3 décimales, unités `€` et `€/km`
+  pour les coûts.
+
+Aucun changement à faire dans Torque Pro.
+
 ## 2027.2.1b5
 
 - **Unités des coûts** : « Coût carburant (trajet) » s'affiche en `€` et « Coût par km » en `€/km`
@@ -32,8 +45,8 @@ Numérotation : `AAAA.M.x` (stable) et `AAAA.M.xbN` (pré-version / pre-release)
 - Si le début du trajet n'a vraiment pas été reçu (pas de réseau au démarrage, par exemple), la
   notification s'intitule **« début de trajet manqué »** et explique la cause, au lieu de parler d'un
   profil inconnu. Les données restent ignorées pour ne pas mélanger deux véhicules.
-- **Début de trajet manqué** (HA arrêté quand le trajet démarre, cas du 04/11) : le véhicule est
-  reconnu à ses **PID propres** (PID perso qu'aucun autre véhicule n'a, ex. les PID Laguna). Les PID
+- **Début de trajet manqué** (HA arrêté quand le trajet démarre) : le véhicule est
+  reconnu à ses **PID propres** (PID perso qu'aucun autre véhicule n'a). Les PID
   communs (GPS, accéléromètre, PID standard) ne comptent pas : sans PID propre, rien n'est deviné.
 - Tests : session conservée au redémarrage, notification sans nom de profil, véhicule reconnu à ses PID.
 
