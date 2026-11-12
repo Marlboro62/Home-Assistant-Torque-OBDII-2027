@@ -207,3 +207,33 @@ async def test_missed_trip_start_guessed_by_pids(hass: HomeAssistant, hass_clien
     assert router._session_entry["s9"][0] == "laguna_id"
     state = hass.states.get(reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_laguna_id_k5"))
     assert state is not None and float(state.state) == 80.0
+
+
+async def test_shared_code_names_saved_before_units(hass: HomeAssistant, hass_client_no_auth) -> None:
+    """Noms d'un code partagé suivis de leurs unités : noms enregistrés, séparation après redémarrage."""
+    entry = await _setup(hass)
+    client = await hass_client_no_auth()
+    # Requête de noms de Torque : noms courts puis unités (listes, une valeur par PID)
+    await client.get(
+        "/api/webhook/hook_laguna",
+        params=[
+            ("session", "1"), ("id", "tel"),
+            ("userShortName222201", "Niveau"), ("userShortName222201", "Resist"),
+            ("userUnit222201", "l"), ("userUnit222201", "Ohm"),
+        ],
+    )
+    await hass.async_block_till_done()
+    assert entry.options["multi_pid_names"]["k222201"]["short"] == ["Niveau", "Resist"]
+
+    # Redémarrage de HA : les noms viennent des options, la séparation fonctionne sans nouvel envoi
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    await client.get(
+        "/api/webhook/hook_laguna",
+        params=[("session", "2"), ("id", "tel"), ("k222201", "15.35"), ("k222201", "226")],
+    )
+    await hass.async_block_till_done()
+    reg = er.async_get(hass)
+    for key, value in (("k222201_niveau", 15.35), ("k222201_resist", 226.0)):
+        entity_id = reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_{entry.entry_id}_{key}")
+        assert entity_id and float(hass.states.get(entity_id).state) == value
