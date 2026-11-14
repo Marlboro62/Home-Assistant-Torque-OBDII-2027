@@ -200,6 +200,32 @@ Astuce : fermer puis relancer Torque avant le trajet pour qu'il renvoie les noms
 - Rafraîchissement lent : réduire le nombre de PID dans « Sélectionner quoi surveiller »
 - Diagnostics : Paramètres → Appareils et services → *Torque OBD-II* → ⋮ du véhicule → *Télécharger les diagnostics*
 
+### Erreur d'envoi au lancement de Torque (proxy inverse)
+
+Symptôme : au lancement, Torque affiche une erreur d'envoi web (`404` ou `414 during user
+configured web upload`) alors que les valeurs arrivent bien, et le journal HA indique
+`k… reçu N fois mais 0 nom(s) connu(s)` : les PID perso à code partagé ne sont jamais séparés.
+
+Cause : Torque envoie les noms de tous les PID (`userShortName…`, `userFullName…`) dans une seule
+requête GET, dont l'adresse peut dépasser 8 Ko avec beaucoup de PID perso. Un proxy inverse
+nginx (Nginx Proxy Manager, SWAG…) refuse par défaut une telle adresse (`414 Request-URI Too
+Large`) : les noms n'atteignent jamais Home Assistant, qui accepte, lui, environ 24 Ko.
+
+Correction : augmenter la limite du proxy, par exemple à 32 Ko.
+
+- **Nginx Proxy Manager** : ajouter la ligne suivante dans `/data/nginx/custom/http.conf`
+  (créer le fichier s'il n'existe pas), puis `nginx -t && nginx -s reload` :
+
+  ```nginx
+  large_client_header_buffers 4 32k;
+  ```
+
+- **nginx** : même directive dans le bloc `http { … }`.
+
+Vérification : dans le journal d'accès du proxy, la requête des noms passe de `414` à `200`.
+Les noms sont ensuite enregistrés dans les options du véhicule et conservés après un
+redémarrage de Home Assistant.
+
 ---
 
 ## English
@@ -225,6 +251,13 @@ server URL to that address and leave the email empty. Keep it private: it acts a
 **Upgrading from 2027.1.x**: the old unauthenticated `/api/torque-<vehicle-name>` address is gone.
 Each vehicle gets its private address automatically and a warning appears in **Settings → Repairs**:
 open the vehicle options → **Address to enter in Torque Pro** and copy it into Torque Pro.
+
+**Upload error when Torque starts, behind a reverse proxy**: Torque sends the names of all PIDs in
+one GET request whose URL can exceed 8 KB. nginx (Nginx Proxy Manager, SWAG…) rejects it with
+`414 Request-URI Too Large`, so the names never reach Home Assistant and custom PIDs sharing a
+request are not split (log message `reçu N fois mais 0 nom(s) connu(s)`). Add
+`large_client_header_buffers 4 32k;` to the `http` block (Nginx Proxy Manager:
+`/data/nginx/custom/http.conf`) and reload nginx.
 
 ---
 
